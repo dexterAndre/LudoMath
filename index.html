@@ -6,7 +6,7 @@
         <link rel="canonical" href="ludomath.net"/>
         <script type="text/javascript">
             var host = "ludomath.net";
-            if ((host == window.location.host) && window.location.protocol != "https:"))
+            if ((host == window.location.host) && (window.location.protocol != "https:"))
             {
                 window.location.protocol = "https";
             }
@@ -17,11 +17,16 @@
     </head>
     <body>
         <div class="header">
-            <button class="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+            <div class="header-content">
+                <button id="btn-brand">LudoMath</button>
+                <button id="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+                <input id="inp-search" type="text" placeholder="Search"/>
+                <button id="btn-profile">Profile <i class="fas fa-user"></i></button>
+            </div>
         </div>
         <div class="base">
             <div class="breadcrumbs">
-                <a href="www.google.com">Home</a> / 
+                <a href="www.google.com">Home</a><i class="fas fa-angle-double-right"></i>
             </div>
             <div class="content">
                 <h1>Home</h1>
@@ -30,6 +35,14 @@
                     And hello, world! 
                     Hello, once again! 
                 </p>
+                <div class="grid">
+                    <div class="square"></div>
+                    <div class="square"></div>
+                    <div class="square"></div>
+                    <div class="square"></div>
+                    <div class="square"></div>
+                    <div class="square"></div>
+                </div>
             </div>
         </div>
     </body>
