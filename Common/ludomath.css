@@ -148,3 +148,12 @@ body
 {
     border-radius: 50%;
 }
+
+.box-info
+{
+    margin: 20px;
+    padding: 10px;
+
+    background-color: coral;
+    border-radius: 10px;
+}
