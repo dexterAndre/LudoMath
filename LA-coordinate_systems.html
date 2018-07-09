@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LudoMath - Vectors</title>
+        <link rel="canonical" href="ludomath.net"/>
+        <script type="text/javascript">
+            var host = "ludomath.net";
+            if ((host == window.location.host) && (window.location.protocol != "https:"))
+            {
+                window.location.protocol = "https";
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" media="screen" href="Common/ludomath.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <button id="btn-brand">LudoMath</button>
+                <button id="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+                <input id="inp-search" type="text" placeholder="Search"/>
+                <button id="btn-profile">Profile <i class="fas fa-user"></i></button>
+            </div>
+        </div>
+        <div class="base">
+            <div class="breadcrumbs">
+                <a href="../">Home</a>
+                <i class="fas fa-angle-double-right"></i>
+                <a href="../LA.html">Linear Algebra</a>
+                <i class="fas fa-angle-double-right"></i>
+                <a href="/">Vectors</a>
+            </div>
+            <div class="content">
+                <h1>Introduction to Vectors</h1>
+                <p>
+                    Vectors are used extensively throughout almost all fields of game development. Movement, shading, collision, lighting models all rely heavily on the use of vectors. If we are to master game programming, we have to understand vectors. 
+                </p>
+                <p class="box-info">
+                    Vectors are geometric objects that has both direction and magnitude. 
+                </p>
+                <p>
+                    We can interpret the word <i>magnitude</i> to mean "length along that direction". This word is used in most texts on vectors, and also in most math libraries out there. 
+                </p>
+                <h2>Notation</h2>
+                <p>
+                    When we write vectors on paper, we usually want to specify its name and its contents. Different texts use different naming conventions and markup style. Some textbooks - especially older ones - use the bolded notation to write the name of the vector, with standard parentheses to contain its information: \({\bf a} = (3, 4)\).
+                </p>
+                <p>
+                    We will avoid this type of notation in LudoMath, in favor of the overhead arrow and square brackets: \(\overrightarrow{a} = [3, 4]\). 
+                </p>
+                <h2>Geometric Meaning</h2>
+                <p>
+                    Vectors are first and foremost geometric objects. They represent a direction and magnitude in some dimension. We can choose any dimension we want, but in game development, we usually end up using 2D, 3D, and 4D vectors. Why do we use four-dimensional vectors? We will get back to that in the chapter on <i>transformations</i>. 
+                </p>
+                <h2>Forms</h2>
+                <p>
+                    In addition to writing vectors differently, we can also express them via different kinds of information. 
+                </p>
+                <p>
+                    In most game engines, you will be writing them in <i>Cartesian form</i>, which contains information about the x-, y-, and z-components along the coordinate axes. 
+                </p>
+                <p>
+                    Sometimes, you also just want to express vectors directly by what 
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
