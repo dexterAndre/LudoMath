@@ -155,30 +155,108 @@ h2
 {
     margin: 5px;
 
-    border: 1px solid #ccc;
-    border-radius: 16px;
+    position: relative;
 
     float: left;
     width: 180px;
+
+    outline: none;
+
+    transition: color 0.2s ease-out;
+    --webkit-transition: color 0.2s;
+    --moz-transition: color 0.2s;
+}
+.gallery-content img
+{
+    width: 180px;
+    height: 180px;
+    display: block;
+
+    margin: 0 auto;
+    /* vertical-align: middle; */
+
+    transition: opacity 0.2s ease-out;
+    --webkit-transition: opacity 0.2s ease-out;
+    --moz-transition: opacity 0.2s ease-out;
 }
 
 .gallery-content:hover
 {
-    border: 1ps solid #777;
+    color: #A8A8A8;
+}
+.gallery-content img:hover
+{
+    opacity: .7;
+}
+.gallery-content .img-container
+{
+    width: 180px;
+    height: 180px;
+
+    background-color: black;
 }
 
-.gallery-content img
+#topic-numbers_and_algebra
+{
+    background-color: #DEE6F8;
+}
+#topic-numbers_and_algebra:hover
+{
+    color: #2B5FC7;
+}
+#topic-numbers_and_algebra img
+{
+    background-color: #DEE6F8;
+
+    margin: auto;
+
+    width: 156.8px;
+    height: 52.5px;
+}
+
+#topic-linear_algebra:hover
+{
+    color: #FFA868
+}
+
+#topic-geometry:hover
+{
+    color: #D27E7E;
+}
+
+#topic-functions_and_curves:hover
+{
+    color: #91B56A;
+}
+
+#topic-discrete_mathematics:hover
+{
+    color: #D27EC8;
+}
+
+/* .gallery-content img
 {
     width: 100%;
     height: auto;
 
-    margin-bottom: 16px;
-}
+    margin: 0;
+    padding: 0;
+} */
 
-.description
+.image-title
 {
     padding: 15px;
     text-align: center;
 
     font-size: 1.75em;
+    height: 65px;
+
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #ccc;
+}
+
+/* Correcting line height manually */
+#topic-geometry
+{
+    line-height: 65px;
 }
