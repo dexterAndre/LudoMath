@@ -119,6 +119,9 @@ h1
 {
     text-align: center;
     font-weight: 700;
+
+    margin: 0;
+    padding-top: 16px;
 }
 
 h2
@@ -141,4 +144,41 @@ h2
     border: 4px solid coral;
 
     text-align: center;
+}
+
+.gallery
+{
+    margin: auto 10%;
+}
+
+.gallery-content
+{
+    margin: 5px;
+
+    border: 1px solid #ccc;
+    border-radius: 16px;
+
+    float: left;
+    width: 180px;
+}
+
+.gallery-content:hover
+{
+    border: 1ps solid #777;
+}
+
+.gallery-content img
+{
+    width: 100%;
+    height: auto;
+
+    margin-bottom: 16px;
+}
+
+.description
+{
+    padding: 15px;
+    text-align: center;
+
+    font-size: 1.75em;
 }
