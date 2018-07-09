@@ -131,30 +131,6 @@ h2
     margin: auto 64px;
 }
 
-.grid
-{
-    background-color: white;
-}
-
-.square
-{
-    width: 30%;
-    background: purple;
-    padding-bottom: 30%;
-    margin: 1.66%;
-    float: left;
-    border-radius: 5%;
-
-    transition: background-color 0.3s ease-out, border-radius 0.3s ease-out;
-    --webkit-transition: background-color 0.6s ease-out;
-    --moz-transition: background-color 0.6s ease-out;
-}
-
-.square:hover
-{
-    border-radius: 50%;
-}
-
 .box-info
 {
     margin: 20px;
