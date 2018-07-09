@@ -10,24 +10,33 @@
                 window.location.protocol = "https";
             }
         </script>
-        <link rel="stylesheet" type="text/css" media="screen" href="../Common/ludomath.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="grapher.css">
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+        <script type="text/javascript" scr="../Common/webgl-utils.js"
     </head>
     <body>
     	<div class="bar-menu">
-    		
+            <ul>
+                <li>File</li>
+                <li>Edit</li>
+                <li>View</li>
+                <li>Create</li>
+                <li>Select</li>
+                <li>About</li>
+            </ul>
     	</div>
     	<div class="layout-horizontal">
     		<div id="outliner">
     			
     		</div>
     		<div class="layout-vertical" id="gl-canvas">
-
+                <canvas id="gl-canvas" width="640" height="480"></canvas>
     		</div>
     		<div id="bar-tools">
     			
     		</div>
-    	</div>
+        </div>
+        <script type="text/javascript" src="grapher.js"></script>
     </body>
 </html>
