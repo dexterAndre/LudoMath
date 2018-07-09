@@ -133,6 +133,40 @@ h2
 {
     margin: auto 64px;
 }
+.content ul
+{
+    padding: 0 20px;
+    list-style-type: none;
+}
+.content ul li a
+{
+    font-size: 1.25em;
+    color: #373737;
+
+    transition: color 0.2s ease-out;
+    --webkit-transition: color 0.2s ease-out;
+    --moz-transition: color 0.2s ease-out;
+}
+#link-NA:hover
+{
+    color: #2B5FC7;
+}
+#link-LA:hover
+{
+    color: #FFA868;
+}
+#link-GEO:hover
+{
+    color: #D27E7E;
+}
+#link-FC:hover
+{
+    color: #91B56A;
+}
+#link-DM:hover
+{
+    color: #D27EC8;
+}
 
 .box-info
 {
@@ -148,7 +182,11 @@ h2
 
 .gallery
 {
-    margin: auto 10%;
+    margin: 0 20px;
+    padding: 0 20px;
+    background-color: white;
+    display: table-cell;
+    text-align: center;
 }
 
 .gallery-content
@@ -192,8 +230,6 @@ h2
 {
     width: 180px;
     height: 180px;
-
-    background-color: black;
 }
 
 #topic-numbers_and_algebra
@@ -203,20 +239,17 @@ h2
 #topic-numbers_and_algebra:hover
 {
     color: #2B5FC7;
+    background-color: transparent;
 }
-#topic-numbers_and_algebra img
+
+#topic-linear_algebra
 {
-    background-color: #DEE6F8;
-
-    margin: auto;
-
-    width: 156.8px;
-    height: 52.5px;
+    background-color: #FFE7D6;
 }
-
 #topic-linear_algebra:hover
 {
-    color: #FFA868
+    color: #FFA868;
+    background-color: transparent;
 }
 
 #topic-geometry:hover
@@ -259,4 +292,5 @@ h2
 #topic-geometry
 {
     line-height: 65px;
+    overflow: hidden;
 }
