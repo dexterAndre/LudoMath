@@ -133,12 +133,12 @@ h2
 {
     margin: auto 64px;
 }
-.content ul
+.content #list-topics
 {
     padding: 0 20px;
     list-style-type: none;
 }
-.content ul li a
+.content #list-topics a
 {
     font-size: 1.25em;
     color: #373737;
