@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>LudoMath - Grahper</title>
+        <title>LudoMath - Unit Interval Designer</title>
         <link rel="canonical" href="ludomath.net"/>
         <script type="text/javascript">
             var host = "ludomath.net";
@@ -13,28 +13,25 @@
         <link rel="stylesheet" type="text/css" media="screen" href="grapher.css">
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-        <script type="text/javascript" scr="../Common/webgl-utils.js"
     </head>
     <body>
-    	<div class="bar-menu">
-            <ul>
-                <li>File</li>
-                <li>Edit</li>
-                <li>View</li>
-                <li>Create</li>
-                <li>Select</li>
-                <li>About</li>
+    	<div>
+            <ul class="bar-menu">
+                <li><button>File</button></li>
+                <li><button>Edit</button></li>
+                <li><button>View</button></li>
+                <li><button>Create</button></li>
+                <li><button>Select</button></li>
+                <li><button>About</button></li>
+                <li id="brand">Unit Interval Designer</li>
             </ul>
     	</div>
     	<div class="layout-horizontal">
-    		<div id="outliner">
-    			
-    		</div>
-    		<div class="layout-vertical" id="gl-canvas">
-                <canvas id="gl-canvas" width="640" height="480"></canvas>
-    		</div>
-    		<div id="bar-tools">
-    			
+    		<div class="layout-vertical">
+                <canvas id="gl-canvas"></canvas>
+                <div class="settings">
+                    <p>reverse: <span class="settings-value">on</span></p>
+                </div>
     		</div>
         </div>
         <script type="text/javascript" src="grapher.js"></script>
