@@ -1,3 +1,38 @@
+/* Use box-sizing: border-box; in order to put borders inside? */
+
+
+/* Phones */
+@media only screen and (max-width: 600px)
+{
+
+}
+/* Large phones etc. */
+@media only screen and (min-width: 600px)
+{
+
+}
+/* Tablets */
+@media only screen and (min-width: 768px)
+{
+
+}
+/* Laptops etc. */
+@media only screen and (min-width: 992px)
+{
+
+}
+/* Desktops etc. */
+@media only screen and (min-width: 1200px)
+{
+    
+}
+
+
+
+
+
+
+
 body
 {
     margin: 0;
