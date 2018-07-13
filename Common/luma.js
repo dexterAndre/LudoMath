@@ -108,32 +108,58 @@ Vec2.prototype.reflection = function(v) { var u = v.normalization(); return this
 Vec2.prototype.reflectionUnit = function(v) { return this.sub(v.mul(2 * this.dot(v))); };
 Vec2.prototype.reflect = function(v) { var u = v.normalization(); var temp = this.sub(u.mul(2 * this.dot(u))); this.x = temp.x; this.y = temp.y; };
 Vec2.prototype.reflectUnit = function(v) { var temp = this.sub(v.mul(2 * this.dot(v))); this.x = temp.x; this.y = temp.y; };
-Vec2.prototype.refraction = function(v, n1, n2, e)
+Vec2.prototype.refraction = function(v, n1, n2) // Returns null if having to reflect
 {
     var temp = this;
     var n = n1 / n2;
-    var t1 = v.angleDirected(this.negation());          // Directed angle between normal and incident
-    var tc = Math.asin(n2 / n1);                        // Critical angle
+    var t1 = v.angleDirected(this.negation());              // Directed angle between normal and incident
     
-    // Refract if incident angle is less than or equal to critical angle
-    // Have to use non-directed angles because of using Math.asin in tc
-    if (this.negation().angle(v) < tc)
+    // If travelling from dense medium to rare medium (e.g. water-to-air)
+    if (n > 1)
+    {
+        var tc = Math.asin(n2 / n1);                        // Critical angle
+
+        // Refract if incident angle is less than or equal to critical angle
+        // Have to use non-directed angles because of using Math.asin in tc
+        if (this.negation().angle(v) <= tc)
+        {
+            var t2 = Math.asin(n * Math.sin(t1));           // Directed angle between negated normal and refracted vector
+            var t3 = new Vec2(1, 0).angleDirected(v);       // Directed angle between x-axis and normal
+            var mag = temp.mag();
+            temp = new Vec2(
+                Math.cos(t3 + 180 * DEG2RAD + t2),
+                Math.sin(t3 + 180 * DEG2RAD + t2));
+            temp.mulThis(mag);
+            console.log("Dense to rare");
+            return temp;
+        }
+        // Reflect if incident angle is greater than critical angle
+        else
+        {
+            console.log("Had to reflect");
+            // return this.reflection(v);
+            return null;
+        }
+
+    }
+    // Else if travelling from rare medium to dense medium (e.g. air-to-water)
+    else if (n < 1)
     {
         var t2 = Math.asin(n * Math.sin(t1));               // Directed angle between negated normal and refracted vector
-        console.log("asin(" + n + " * sin(" + t1 + ")): " + t2);
         var t3 = new Vec2(1, 0).angleDirected(v);           // Directed angle between x-axis and normal
         var mag = temp.mag();
         temp = new Vec2(
             Math.cos(t3 + 180 * DEG2RAD + t2),
             Math.sin(t3 + 180 * DEG2RAD + t2));
-        temp.mulThis(mag);
-        return new Vec2(temp.x, temp.y);
-    }
-    // Reflect if incident angle is greater than critical angle
-    else
-    {
-        return this.reflection(v);
-    }
+            temp.mulThis(mag);
+            console.log("Rare to dense");
+            return temp;
+        }
+        // Else if travelling between same medii (n == 1) (e.g. air-to-air)
+        {
+            console.log("No change in medii");
+            return this;
+        }
 };
 Vec2.prototype.refractionUnit = function(v, n1, n2)
 {
