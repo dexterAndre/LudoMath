@@ -15,6 +15,8 @@
     - Clean up code structure - use a generic rendering function for each of the different types
     - Enable refraction code to handle > 1 values for n1 / n2
     - Remember to also refract the first ray, which is an exception from the for-loop
+    - Add color property to the vectors, decreasing opacity for each light bounce
+    - Make light bouncing a recursive function with max bounce times
 
     1. Correct ray placement
     2. Varying density of rays
@@ -107,16 +109,24 @@ void main(void)
 
 var rayVSCode = `
 attribute vec2 coordinates;
+attribute vec4 color;
+
+varying vec4 fColor;
 
 void main(void)
 {
+    fColor = color;
     gl_Position = vec4(coordinates, 0.0, 1.0);
 }
 `;
 var rayFSCode = `
+precision mediump float;
+
+varying vec4 fColor;
+
 void main(void)
 {
-    gl_FragColor = vec4(0.8, 0.8, 0.2, 1.0);
+    gl_FragColor = fColor;
 }
 `;
 
@@ -196,7 +206,7 @@ function updateGeometry()
     gizmos.push(lineAB[0], lineAB[1], lineAB[2], lineAB[3]);
     // Rays
     // Line-circle intercept
-    function interceptLineCircle(cR, cP, p1, p2)
+    function interceptLinesegCircle(cR, cP, p1, p2)
     {
         // Taken from https://stackoverflow.com/questions/37224912/circle-line-segment-collision
 
@@ -233,16 +243,23 @@ function updateGeometry()
         var mag2 = p2.sub(p).magSqr();
 
         return mag1 < mag2 ? p1 : p2;
-    }
+    };
+    function farthestPoint(p, p1, p2)
+    {
+        var mag1 = p1.sub(p).magSqr();
+        var mag2 = p2.sub(p).magSqr();
+
+        return mag1 < mag2 ? p2 : p1;
+    };
 
     var vAB = new Vec2(pointB[0] - pointA[0], pointB[1] - pointA[1]);
-    console.log("vAB: ", vAB);
+    // console.log("vAB: ", vAB);
     var vA = new Vec2(pointA[0], pointA[1]);
-    console.log("vA:  ", vA);
+    // console.log("vA:  ", vA);
     var vAC = new Vec2(pointC[0], pointC[1]).sub(vA);
-    console.log("vAC: ", vAC);
+    // console.log("vAC: ", vAC);
     var vN = vAC.rejection(vAB).normalization();
-    console.log("vN:  ", vN);
+    // console.log("vN:  ", vN);
 
     // Adding rays
     for (var i = 0; i <= rayDensity; i++)
@@ -250,39 +267,84 @@ function updateGeometry()
         var vP;         // Point along AB
         // Taking the first point into account. JS didn't want to divide 0 by rayDensity. 
         i == 0 ? vP = vA : vP = (vA.add(vAB.mul(i / rayDensity)));
-        console.log("vP:  ", vP);
         
-        // Collecting both collision points. Setting ray length to 1000 for now. May have to increase. 
-        var collisionPoints = interceptLineCircle(
+        // Collecting both collision points from point along red line onto circle. 
+        // The multiplicand in the last line is the full distance from the point to the end of circle, and then + 1. 
+        var colPointsFirst = interceptLinesegCircle(
             circleRadius, new Vec2(pointC[0], pointC[1]), 
             vP, 
-            vP.add(vN.mul(1000)));
+            vP.add(vN.mul(new Vec2(pointC[0], pointC[1]).sub(vP).mag() + 2 * circleRadius + 1)));
 
         // If collision, we create a line segment from the red line to the collision point
         var tempVec;
-        if (collisionPoints)
+        if (colPointsFirst)
         {
             // Adding first line segment
-            rays.push(vP.x, vP.y, collisionPoints[0].x, collisionPoints[0].y);
+            var nearPoint = closestPoint(vP, colPointsFirst[0], colPointsFirst[1]);
+            rays.push(
+                vP.x, vP.y, 0.8, 0.8, 0.2, 1.0,
+                nearPoint.x, nearPoint.y, 0.8, 0.8, 0.2, 1.0);
 
             // Adding second line segment (inside circle)
-            var closeVec = closestPoint(vP, collisionPoints[0], collisionPoints[1]);
             tempVec = 
                 vN
-                .refraction((closeVec.sub(new Vec2(pointC.x, pointC.y))), n1, n2)
-                .normalization();
+                .refraction((nearPoint.sub(new Vec2(pointC.x, pointC.y))), n1, n2);
+            
+            if (tempVec != null)
+            {
+                vN.normalize();
 
-            var newColPoints = interceptLineCircle(
-                circleRadius, new Vec2(pointC[0], pointC[1]), 
-                collisionPoints[0].sub(tempVec.mul(1)), 
-                collisionPoints[0].add(tempVec.mul(2 * circleRadius + 1)));
-            rays.push(tempVec.x, tempVec.y, newColPoints[0].x, newColPoints[0].y);
+                // Collecting both collision points from first collision point along refracted ray
+                var colPointsSecond = interceptLinesegCircle(
+                    circleRadius, new Vec2(pointC[0], pointC[1]), 
+                    nearPoint.sub(tempVec), 
+                    nearPoint.add(tempVec.mul(2 * circleRadius + 1)));
+    
+                var farPoint = farthestPoint(vP, colPointsSecond[0], colPointsSecond[1]);
+                rays.push(
+                    nearPoint.x, nearPoint.y, 0.2, 0.8, 0.8, 1.0,
+                    farPoint.x, farPoint.y, 0.2, 0.8, 0.8, 1.0);
+    
+                // Adding third line segment (escaping from circle)
+                tempVec = 
+                    tempVec
+                    .refraction(new Vec2(pointC[0], pointC[1]).sub(farPoint), n1, n2);
+
+                if (tempVec != null)
+                {
+                    tempVec.normalize();
+                    tempVec.mulThis(1000);
+                    rays.push(
+                        farPoint.x, farPoint.y, 0.8, 0.2, 0.8, 1.0,
+                        tempVec.x, tempVec.y, 0.8, 0.2, 0.8, 1.0);
+                }
+                else
+                {
+                    // If having to reflect
+                    tempVec = farPoint.add(farPoint.sub(nearPoint).reflection(new Vec2(pointC[0], pointC[1]).sub(farPoint))).normalization().mul(1000);
+                    rays.push(
+                        farPoint.x, farPoint.y, 0.0, 0.0, 0.0, 1.0,
+                        tempVec.x, tempVec.y, 0.0, 0.0, 0.0, 1.0);
+                }
+            }
+            else
+            {
+                // If having to reflect
+                tempVec = nearPoint.add(nearPoint.sub(vP).reflection(nearPoint.sub(new Vec2(pointC[0], pointC[1]))).normalization().mul(1000));
+                rays.push(
+                    nearPoint.x, nearPoint.y, 1.0, 1.0, 1.0, 1.0,
+                    tempVec.x, tempVec.y, 1.0, 1.0, 1.0, 1.0);
+            }
         }
         // If no collision, just draw a ray and move to next iteration
         else
         {
             tempVec = vP.add(vN.mul(1000));
-            rays.push(vP.x, vP.y, tempVec.x, tempVec.y);
+            rays.push(
+                vP.x, vP.y, 0.8, 0.8, 0.2, 1.0, 
+                tempVec.x, tempVec.y, 0.8, 0.8, 0.2, 1.0);
+
+            console.log("Didn't hit circle");
         }
     }
 }
@@ -421,12 +483,15 @@ function render(gl)
 
         // Associate shader program to buffer objects
         gl.bindBuffer(gl.ARRAY_BUFFER, vbo_rays);
-        var coordinatesLoc = gl.getAttribLocation(shaderProgram, "coordinates");
-        gl.vertexAttribPointer(coordinatesLoc, 2, gl.FLOAT, false, 0, 0);
+        const coordinatesLoc = gl.getAttribLocation(shaderProgram, "coordinates");
+        gl.vertexAttribPointer(coordinatesLoc, 2, gl.FLOAT, false, 4 /* sizeof(gl.FLOAT) */ * 6, 0);
         gl.enableVertexAttribArray(coordinatesLoc);
+        const colorLoc = gl.getAttribLocation(shaderProgram, "color");
+        gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 /* sizeof(gl.FLOAT) */ * 6, 4 /* sizeof(gl.FLOAT) */ * 2);
+        gl.enableVertexAttribArray(colorLoc);
 
         // Draw geometry
-        gl.drawArrays(gl.LINES, 0, rays.length / 2);
+        gl.drawArrays(gl.LINES, 0, rays.length / 6);
     }
 }
 
