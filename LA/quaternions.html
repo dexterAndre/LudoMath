@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LudoMath - Quaternions</title>
+        <link rel="canonical" href="ludomath.net"/>
+        <script type="text/javascript">
+            var host = "ludomath.net";
+            if ((host == window.location.host) && (window.location.protocol != "https:"))
+            {
+                window.location.protocol = "https";
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" media="screen" href="Common/ludomath.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <button id="btn-brand">LudoMath</button>
+                <button id="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+                <input id="inp-search" type="text" placeholder="Search"/>
+                <button id="btn-profile">Profile <i class="fas fa-user"></i></button>
+            </div>
+        </div>
+        <div class="base">
+            <div class="breadcrumbs">
+                    <a href="../index.html">Home</a>
+                    <i class="fas fa-angle-double-right"></i>
+                    <a href="index.html">Linear Algebra</a>
+                    <i class="fas fa-angle-double-right"></i>
+                    <a href="">Quaternions</a>
+            </div>
+            <div class="content">
+                <h1>Introduction to Quaternions</h1>
+                <p>
+                    Quaternions are one of those things that people see as black magic. They are viewed as unintuitive, both in using them and in concept. The fact that they are four-dimensional complex numbers does not ease the confusion, either. 
+                </p>
+                <p>This chapter will focus mostly on getting familiar with quaternions, using them in actual programming, and get to        know when - and when not to - use them. 
+                </p>
+                <p>
+                    If you've heard of quaternions before, and you're into programming, then you have probably heard about them in terms of quaternion rotation. These types of rotations have several advantages over matrix rotation: 
+                    <!-- Great list from https://math.stackexchange.com/questions/1386003/what-are-advantages-of-quaternion-over-3-times3-rotator-matrix-for-representin -->
+                </p>
+                <ul>
+                    <li>Avoiding gimbal lock</li>
+                    <li>Cheaper to store (4 numbers compared to 16)</li>
+                    <li>Cheaper to conatenate</li>
+                    <li>Cheaper to fix rounding errors</li>
+                    <li>Spherical linear interpolation</li>
+                    <li>Although we have to convert from quaternion back to matrix, it is a relatively cheap operation</li>
+                    <li>Dual quaternions are used in animation...?</li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
