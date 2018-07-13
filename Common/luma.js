@@ -108,20 +108,32 @@ Vec2.prototype.reflection = function(v) { var u = v.normalization(); return this
 Vec2.prototype.reflectionUnit = function(v) { return this.sub(v.mul(2 * this.dot(v))); };
 Vec2.prototype.reflect = function(v) { var u = v.normalization(); var temp = this.sub(u.mul(2 * this.dot(u))); this.x = temp.x; this.y = temp.y; };
 Vec2.prototype.reflectUnit = function(v) { var temp = this.sub(v.mul(2 * this.dot(v))); this.x = temp.x; this.y = temp.y; };
-Vec2.prototype.refraction = function(v, n1, n2)
+Vec2.prototype.refraction = function(v, n1, n2, e)
 {
     var temp = this;
     var n = n1 / n2;
-    var t1 = this.negation().angle(v);              // Angle between indicent and normal
-    var signum = (Math.cos(temp.angle(new Vec2(1, 0))) > 0 ? 1 : -1);
-    var t2 = Math.asin(n * Math.sin(t1)) * signum;  // Angle between refractor and negated normal
-    var t3 = v.angle(new Vec2(1, 0));               // Angle between x-axis and normal (maybe use directed angle?)
-    var mag = temp.mag();
-    temp = new Vec2(
-        Math.cos(t3 + 180 * DEG2RAD + t2),
-        Math.sin(t3 + 180 * DEG2RAD + t2));
-    temp.mulThis(mag);
-    return new Vec2(temp.x, temp.y);
+    var t1 = v.angleDirected(this.negation());          // Directed angle between normal and incident
+    var tc = Math.asin(n2 / n1);                        // Critical angle
+    
+    // Refract if incident angle is less than or equal to critical angle
+    // Have to use non-directed angles because of using Math.asin in tc
+    if (this.negation().angle(v) < tc)
+    {
+        var t2 = Math.asin(n * Math.sin(t1));               // Directed angle between negated normal and refracted vector
+        console.log("asin(" + n + " * sin(" + t1 + ")): " + t2);
+        var t3 = new Vec2(1, 0).angleDirected(v);           // Directed angle between x-axis and normal
+        var mag = temp.mag();
+        temp = new Vec2(
+            Math.cos(t3 + 180 * DEG2RAD + t2),
+            Math.sin(t3 + 180 * DEG2RAD + t2));
+        temp.mulThis(mag);
+        return new Vec2(temp.x, temp.y);
+    }
+    // Reflect if incident angle is greater than critical angle
+    else
+    {
+        return this.reflection(v);
+    }
 };
 Vec2.prototype.refractionUnit = function(v, n1, n2)
 {
