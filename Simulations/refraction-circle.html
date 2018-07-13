@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="refraction-circle.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script typs="text/javascript" src="../Common/luma.js"></script>
+</head>
+<body>
+    <div>
+        <canvas id="gl-canvas" width="512" height="512"></canvas>
+    </div>
+
+    <div class="sliderContainer">
+        <p class="description">\(r_d\): ray density. How many rays shoot out of the red line segment. </p>
+        <p class="description">\(n_1\): Index of refraction 1, in the outside area. </p>
+        <p class="description">\(n_2\): Index of refraction 2, inside the circle. </p>
+    </div>
+    <div class="sliderContainer">
+        <p class="variableName">\(r_d\):</p>
+        <input type="range" id="sliderRD" class="slider" onmousemove="update(gl)" min="1" max="100" value="1">
+        <p class="variableValue" id="sliderRDText">1</p>
+    </div>
+    <div class="sliderContainer">
+        <p class="variableName">\(n_1\):</p>
+        <input type="range" id="sliderN1" class="slider" onmousemove="update(gl)" min="0" max="400" value="100">
+        <p class="variableValue" id="sliderN1Text">1</p>
+    </div>
+    <div class="sliderContainer">
+        <p class="variableName">\(n_2\):</p>
+        <input type="range" id="sliderN2" class="slider" onmousemove="update(gl)" min="0" max="400" value="123">
+        <p class="variableValue" id="sliderN2Text">1</p>
+    </div>
+    <script type="text/javascript" src="refraction-circle.js"></script>
+</body>
+</html>
