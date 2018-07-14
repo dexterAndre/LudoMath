@@ -321,16 +321,35 @@ function updateGeometry()
                 else
                 {
                     // If having to reflect
-                    tempVec = farPoint.add(farPoint.sub(nearPoint).reflection(new Vec2(pointC[0], pointC[1]).sub(farPoint))).normalization().mul(1000);
+                    var reflectedVec = 
+                        farPoint
+                        .sub(nearPoint)
+                        .reflection(new Vec2(pointC[0], pointC[1])
+                            .sub(farPoint))
+                        .normalization();
+                    var points = interceptLinesegCircle(
+                        circleRadius, 
+                        new Vec2(pointC[0], pointC[1]), 
+                        farPoint.sub(reflectedVec), 
+                        farPoint.add(reflectedVec.mul(2 * circleRadius + 1)));
+                    var fartherPoint = farthestPoint(farPoint, points[0], points[1]);
+
                     rays.push(
                         farPoint.x, farPoint.y, 0.0, 0.0, 0.0, 1.0,
-                        tempVec.x, tempVec.y, 0.0, 0.0, 0.0, 1.0);
+                        fartherPoint.x, fartherPoint.y, 0.0, 0.0, 0.0, 1.0);
                 }
             }
             else
             {
                 // If having to reflect
-                tempVec = nearPoint.add(nearPoint.sub(vP).reflection(nearPoint.sub(new Vec2(pointC[0], pointC[1]))).normalization().mul(1000));
+                tempVec = 
+                    nearPoint
+                    .add(nearPoint
+                        .sub(vP)
+                        .reflection(nearPoint
+                            .sub(new Vec2(pointC[0], pointC[1])))
+                        .normalization()
+                        .mul(1000));
                 rays.push(
                     nearPoint.x, nearPoint.y, 1.0, 1.0, 1.0, 1.0,
                     tempVec.x, tempVec.y, 1.0, 1.0, 1.0, 1.0);
