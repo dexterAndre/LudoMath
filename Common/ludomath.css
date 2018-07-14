@@ -329,3 +329,59 @@ h2
     line-height: 65px;
     overflow: hidden;
 }
+
+.interactive-canvas
+{
+    text-align: center;
+    margin: 0 auto;
+}
+.interactive-canvas .sliderContainer
+{
+    width: 448px;
+    margin: 16px auto;
+}
+.interactive-canvas .slider
+{
+    -webkit-appearance: none;
+    width: 50%;
+    vertical-align: middle;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+}
+.interactive-canvas .slider:hover
+{
+    opacity: 1.0;
+}
+.interactive-canvas .slider::-webkit-slider-thumb
+{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+.interactive-canvas .variableName
+{
+    text-align: right;
+    vertical-align: middle;
+    display: inline-block;
+    /* margin-bottom: 1em; */
+    margin: auto 0;
+}
+.interactive-canvas .variableValue
+{
+    text-align: left;
+    vertical-align: middle;
+    display: inline-block;
+    margin: auto 0;
+}
+.interactive-canvas .description
+{
+    text-align: left;
+    margin:  auto 0;
+}

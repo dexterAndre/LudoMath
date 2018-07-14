@@ -251,6 +251,7 @@ function updateGeometry()
 
         return mag1 < mag2 ? p2 : p1;
     };
+    
 
     var vAB = new Vec2(pointB[0] - pointA[0], pointB[1] - pointA[1]);
     // console.log("vAB: ", vAB);
@@ -519,7 +520,7 @@ function render(gl)
 window.onload = function initialize()
 {
     // Set up WebGL
-    canvas = this.document.getElementById("gl-canvas");
+    canvas = this.document.getElementById("canvas-refraction-circle");
     gl = canvas.getContext("experimental-webgl");
     
     // Updating and rendering scene

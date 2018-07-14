@@ -13,6 +13,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="../Common/ludomath.css">
         <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+        <script type="text/javascript" src="../Common/luma.js"></script>
     </head>
     <body>
         <div class="header">
@@ -136,11 +137,44 @@
                     \(n_1 * sin(\theta_1) = n_2 * sin(\theta_2)\)
                 </p>
 
+                <p>Refraction playbox:</p>
+                <div class="interactive-canvas">
+                    <canvas id="canvas-refraction-circle" width="512" height="512"></canvas>
+                    <div class="sliderContainer">
+                        <p class="description">\(r_d\): ray density. How many rays shoot out of the red line segment. </p>
+                        <p class="description">\(n_1\): Index of refraction 1, in the outside area. </p>
+                        <p class="description">\(n_2\): Index of refraction 2, inside the circle. </p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(r_d\):</p>
+                        <input type="range" id="sliderRD" class="slider" onmousemove="update(gl)" min="1" max="100" value="1">
+                        <p class="variableValue" id="sliderRDText">1</p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(n_1\):</p>
+                        <input type="range" id="sliderN1" class="slider" onmousemove="update(gl)" min="0" max="400" value="100">
+                        <p class="variableValue" id="sliderN1Text">1</p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(n_2\):</p>
+                        <input type="range" id="sliderN2" class="slider" onmousemove="update(gl)" min="0" max="400" value="123">
+                        <p class="variableValue" id="sliderN2Text">1</p>
+                    </div>
+                </div>
+
+                <p>Problem Ideas:</p>
+                <ul>
+                    <li>Calculate a single refraction angle</li>
+                    <li>Intuition: will the refracted vector's angle be larger or less than the incident angle?</li>
+                    <li>Calculate several refractions</li>
+                </ul>
+
                 <h1>Vector Applications</h1>
                 <p>
                     This section is a collection of both abstract and situational cases for applying the vector mathematics we've learned so far. Sometimes, you have to combine many of the different operations. It is important to remember that vectors do not contain information about position while we are exploring these applications, and see vectors instead as directions with magnitude. 
                 </p>
             </div>
         </div>
+        <script type="text/javascript" src="../Simulations/refraction-circle.js"></script>
     </body>
 </html>
