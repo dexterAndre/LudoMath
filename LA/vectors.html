@@ -35,7 +35,7 @@
             <div class="content">
                 <h1>Introduction to Vectors</h1>
                 <p>
-                    Simply put, vectors can be interpreted as arrows, going from one point and ending in another. More specifically, they are geometric objects that convey information about direction and magnitude. We can interpret the word <i>magnitude</i> to mean "length along its own direction". This word is used in most texts on vectors, and also in most math libraries out there.  They are used extensively throughout almost all fields of game development. Movement, shading, collision, and lighting models all rely heavily on the use of vectors. If we are to master game programming, we have to understand this concept. 
+                    Simply put, vectors can be interpreted as arrows. More specifically, they are geometric objects that hold information about direction and magnitude. By <i>magnitude</i>, we mean "length along its own direction". They are used extensively throughout almost all fields of game development: movement, shading, collision, and lighting models all rely heavily on the use of vectors. 
                 </p>
                 <p class="box-info">
                     Vectors are geometric objects that has both direction and magnitude. 
@@ -46,6 +46,15 @@
                 </p>
                 <p>
                     We will avoid this type of notation in LudoMath, in favor of the overhead arrow and square brackets: \(\overrightarrow{a} = [3, 4]\). 
+                </p>
+                <p>
+                    The notation mentioned above writes vectors in one line as a row-vector. You could also write them vertically as column-vectors: 
+                </p>
+                <p>
+                    $$\overrightarrow{a} = \begin{bmatrix}3 \\ 4 \end{bmatrix}$$
+                </p>
+                <p>
+                    There is no informational difference between the two notations, but there are other reasons for choosing to use column-vector instead of row-vector notation. We will see  thatin the section on matrices later on. For now, we'll keep using row-vector notation. 
                 </p>
                 <h2>Geometric Meaning</h2>
                 <p>

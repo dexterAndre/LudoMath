@@ -17,6 +17,7 @@
     - Remember to also refract the first ray, which is an exception from the for-loop
     - Add color property to the vectors, decreasing opacity for each light bounce
     - Make light bouncing a recursive function with max bounce times
+    - Fix so that the r_d shows the correct amount of rays (minus 1?)
 
     1. Correct ray placement
     2. Varying density of rays
@@ -31,11 +32,19 @@
 var canvas;
 var gl;
 
+var mouseDown = 0;
+var mouseX = 0;
+var mouseY = 0;
+
 // Geometry
 var pointA = [-0.5, -0.5];
 var pointB = [-0.75, 0.23];
 var pointC = [0.0, 0.0];
-var points = [];
+var points = [
+    pointA[0], pointA[1],
+    pointB[0], pointB[1],
+    pointC[0], pointC[1]
+];
 
 var circle = [];
 var circleResolution = 128;
@@ -162,6 +171,12 @@ function updateInput(RD, N1, N2)
     rayDensity = sliderRD.value;
     n1 = sliderN1.value;
     n2 = sliderN2.value;
+
+    // Click-and-drag
+    if (mouseDown)
+    {
+        points.push()
+    }
 }
 
 // Updates the sliders' values
@@ -192,7 +207,10 @@ function updateGeometry()
     rays = [];
 
     // Points
-    points.push(pointA[0], pointA[1], pointB[0], pointB[1], pointC[0], pointC[1]);
+    points.push(
+        pointA[0], pointA[1],
+        pointB[0], pointB[1],
+        pointC[0], pointC[1]);
     // Circle
     for (var i = 0; i < circleResolution * 4; i++)
     {
@@ -515,6 +533,13 @@ function render(gl)
     }
 }
 
+function getMousePosition(canvas, evt)
+{
+    return [
+        (evt.offsetX / canvas.width) * 2 - 1, 
+        ((512 - evt.offsetY) / canvas.height) * 2 - 1];
+}
+
 
 
 window.onload = function initialize()
@@ -522,6 +547,17 @@ window.onload = function initialize()
     // Set up WebGL
     canvas = this.document.getElementById("canvas-refraction-circle");
     gl = canvas.getContext("experimental-webgl");
+
+    // Enabling mouse controls
+    canvas.onmousedown = function(evt) 
+    { 
+        mouseDown = 1; 
+        var mousePos = getMousePosition(canvas, evt); 
+        mouseX = mousePos[0];
+        mouseY = mousePos[1];
+        console.log("x: ", mouseX, "y: ", mouseY);
+    }
+    canvas.onmouseup = function(evt) { mouseDown = 0; }
     
     // Updating and rendering scene
     update(gl);
