@@ -40,8 +40,7 @@ body
     margin: 0;
     padding: 0;
 
-    /* background-color: #E3E9F0; */
-    background-color: black;
+    background-color: #E3E9F0;
 
     font-family: "Bitter", "Roboto", "Avenir", "Montserrat";
 }
