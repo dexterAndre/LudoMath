@@ -175,7 +175,7 @@ function updateInput(RD, N1, N2)
     // Click-and-drag
     if (mouseDown)
     {
-        points.push()
+        points.push(mouseX, mouseY);
     }
 }
 
@@ -427,7 +427,7 @@ function render(gl)
         gl.enableVertexAttribArray(coordinatesLoc);
 
         // Draw geometry
-        gl.drawArrays(gl.POINTS, 0, 3);
+        gl.drawArrays(gl.POINTS, 0, points.length / 2);
     }
 
     // Circle
@@ -555,7 +555,6 @@ window.onload = function initialize()
         var mousePos = getMousePosition(canvas, evt); 
         mouseX = mousePos[0];
         mouseY = mousePos[1];
-        console.log("x: ", mouseX, "y: ", mouseY);
     }
     canvas.onmouseup = function(evt) { mouseDown = 0; }
     
