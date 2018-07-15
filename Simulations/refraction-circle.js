@@ -45,6 +45,9 @@ var points = [
     pointB[0], pointB[1],
     pointC[0], pointC[1]
 ];
+var movingA = 0;
+var movingB = 0;
+var movingC = 0;
 
 var circle = [];
 var circleResolution = 128;
@@ -153,7 +156,7 @@ var sliderN2Text = document.getElementById("sliderN2Text");
 
 function update(gl)
 {
-    console.clear();
+    // console.clear();
 
     // Updating input
     updateInput(rayDensity, n1, n2);
@@ -171,11 +174,24 @@ function updateInput(RD, N1, N2)
     rayDensity = sliderRD.value;
     n1 = sliderN1.value;
     n2 = sliderN2.value;
+}
 
-    // Click-and-drag
-    if (mouseDown)
+function checkPointBoundingBox(point, mousePosition, pointSize)
+{
+    var pointBoundsX = (pointSize / canvas.width);
+    var pointBoundsY = (pointSize / canvas.height);
+
+    if (
+        mousePosition.x <= point.x + pointBoundsX &&
+        mousePosition.x >= point.x - pointBoundsX &&
+        mousePosition.y <= point.y + pointBoundsY &&
+        mousePosition.y >= point.y - pointBoundsY)
     {
-        points.push(mouseX, mouseY);
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -198,12 +214,58 @@ function updateValueText()
     sliderN2Text.textContent = (sliderN2.value / 100).toFixed(2);
 }
 
+// Line-circle intercept
+function interceptLinesegCircle(cR, cP, p1, p2)
+{
+    // Taken from https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+
+    var a, b, c, d, u1, u2, ret, retP1, retP2, v1, v2;
+    v1 = new Vec2(p2.x - p1.x, p2.y - p1.y);
+    v2 = new Vec2(p1.x - cP.x, p1.y - cP.y);
+    b = (v1.x * v2.x + v1.y * v2.y);
+    c = 2 * (v1.x * v1.x + v1.y * v1.y);
+    b *= -2;
+    d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - cR * cR));
+    if(isNaN(d)){ // no intercept
+        return null;
+    }
+    u1 = (b - d) / c;  // these represent the unit distance of point one and two on the line
+    u2 = (b + d) / c;    
+    retP1 = new Vec2();   // return points
+    retP2 = new Vec2();  
+    ret = []; // return array
+    if(u1 <= 1 && u1 >= 0){  // add point if on the line segment
+        retP1.x = p1.x + v1.x * u1;
+        retP1.y = p1.y + v1.y * u1;
+        ret[0] = retP1;
+    }
+    if(u2 <= 1 && u2 >= 0){  // second add point if on the line segment
+        retP2.x = p1.x + v1.x * u2;
+        retP2.y = p1.y + v1.y * u2;
+        ret[ret.length] = retP2;
+    }       
+    return ret;
+};
+function closestPoint(p, p1, p2)
+{
+    var mag1 = p1.sub(p).magSqr();
+    var mag2 = p2.sub(p).magSqr();
+
+    return mag1 < mag2 ? p1 : p2;
+};
+function farthestPoint(p, p1, p2)
+{
+    var mag1 = p1.sub(p).magSqr();
+    var mag2 = p2.sub(p).magSqr();
+
+    return mag1 < mag2 ? p2 : p1;
+};
+
 function updateGeometry()
 {
     // Emptying lists
     points = [];
     circle = [];
-    gizmos = [];
     rays = [];
 
     // Points
@@ -221,56 +283,9 @@ function updateGeometry()
         circle.push(pointC[1] + circleRadius * Math.sin(((i + 1) / (circleResolution)) * Math.PI * 2));
     }
     // Gizmos
-    gizmos.push(lineAB[0], lineAB[1], lineAB[2], lineAB[3]);
+    gizmos = [];
+    gizmos.push(pointA[0], pointA[1], pointB[0], pointB[1]);
     // Rays
-    // Line-circle intercept
-    function interceptLinesegCircle(cR, cP, p1, p2)
-    {
-        // Taken from https://stackoverflow.com/questions/37224912/circle-line-segment-collision
-
-        var a, b, c, d, u1, u2, ret, retP1, retP2, v1, v2;
-        v1 = new Vec2(p2.x - p1.x, p2.y - p1.y);
-        v2 = new Vec2(p1.x - cP.x, p1.y - cP.y);
-        b = (v1.x * v2.x + v1.y * v2.y);
-        c = 2 * (v1.x * v1.x + v1.y * v1.y);
-        b *= -2;
-        d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - cR * cR));
-        if(isNaN(d)){ // no intercept
-            return null;
-        }
-        u1 = (b - d) / c;  // these represent the unit distance of point one and two on the line
-        u2 = (b + d) / c;    
-        retP1 = new Vec2();   // return points
-        retP2 = new Vec2();  
-        ret = []; // return array
-        if(u1 <= 1 && u1 >= 0){  // add point if on the line segment
-            retP1.x = p1.x + v1.x * u1;
-            retP1.y = p1.y + v1.y * u1;
-            ret[0] = retP1;
-        }
-        if(u2 <= 1 && u2 >= 0){  // second add point if on the line segment
-            retP2.x = p1.x + v1.x * u2;
-            retP2.y = p1.y + v1.y * u2;
-            ret[ret.length] = retP2;
-        }       
-        return ret;
-    };
-    function closestPoint(p, p1, p2)
-    {
-        var mag1 = p1.sub(p).magSqr();
-        var mag2 = p2.sub(p).magSqr();
-
-        return mag1 < mag2 ? p1 : p2;
-    };
-    function farthestPoint(p, p1, p2)
-    {
-        var mag1 = p1.sub(p).magSqr();
-        var mag2 = p2.sub(p).magSqr();
-
-        return mag1 < mag2 ? p2 : p1;
-    };
-    
-
     var vAB = new Vec2(pointB[0] - pointA[0], pointB[1] - pointA[1]);
     // console.log("vAB: ", vAB);
     var vA = new Vec2(pointA[0], pointA[1]);
@@ -387,6 +402,10 @@ function updateGeometry()
     }
 }
 
+
+
+
+
 function render(gl)
 {
     // General rendering
@@ -404,7 +423,7 @@ function render(gl)
         gl.bindBuffer(gl.ARRAY_BUFFER, vbo_points);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
+        
         // Shaders
         var vertexShader = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(vertexShader, pointVSCode);
@@ -552,11 +571,98 @@ window.onload = function initialize()
     canvas.onmousedown = function(evt) 
     { 
         mouseDown = 1; 
-        var mousePos = getMousePosition(canvas, evt); 
-        mouseX = mousePos[0];
-        mouseY = mousePos[1];
+
+        var mp = getMousePosition(canvas, evt); 
+        var mousePos = new Vec2(mp[0], mp[1]);
+        // Point A
+        if (checkPointBoundingBox(new Vec2(pointA[0], pointA[1]), mousePos, 10))
+        {
+            movingA = 1;
+        }
+        // Point B
+        else if (checkPointBoundingBox(new Vec2(pointB[0], pointB[1]), mousePos, 10))
+        {
+            movingB = 1;
+        }
+        // Point C
+        else if (checkPointBoundingBox(new Vec2(pointC[0], pointC[1]), mousePos, 10))
+        {
+            movingC = 1;
+        }
     }
-    canvas.onmouseup = function(evt) { mouseDown = 0; }
+    canvas.onmousemove = function(evt)
+    {
+        if (mouseDown)
+        {
+            var mp = getMousePosition(canvas, evt); 
+            var mousePos = new Vec2(mp[0], mp[1]);
+
+            var tempPos = new Vec2(mousePos.x, mousePos.y);
+            // Moving points
+            if (movingA)
+            {
+                // Abort if trying to make red line to intersect circle
+                if (interceptLinesegCircle(
+                    circleRadius, 
+                    new Vec2(pointC[0], pointC[1]),
+                    tempPos,
+                    new Vec2(pointB[0], pointB[1])))
+                {
+                    console.log("Error: red line cannot cross circle! ");
+                    movingA = 0;
+                }
+                else
+                {
+                    pointA[0] = points[0] = mousePos.x;
+                    pointA[1] = points[1] = mousePos.y;
+                }
+            }
+            else if (movingB)
+            {
+                if (interceptLinesegCircle(
+                    circleRadius,
+                    new Vec2(pointC[0], pointC[1]),
+                    tempPos,
+                    new Vec2(pointA[0], pointA[1])))
+                {
+                    console.log("Error: red line cannot cross circle! ");
+                    movingB = 0;
+                }
+                else
+                {
+                    pointB[0] = points[2] = mousePos.x;
+                    pointB[1] = points[3] = mousePos.y;
+                }
+            }
+            else if (movingC)
+            {
+                if (interceptLinesegCircle(
+                    circleRadius,
+                    tempPos,
+                    new Vec2(pointA[0], pointA[1]),
+                    new Vec2(pointB[0], pointB[1])))
+                {
+                    console.log("Error: red line cannot cross circle! ");
+                    movingC = 0;
+                }
+                else
+                {
+                    pointC[0] = points[4] = mousePos.x;
+                    pointC[1] = points[5] = mousePos.y;
+                }
+            }
+
+            update(gl);
+        }
+        else
+        {
+        }
+    }
+    canvas.onmouseup = function(evt) 
+    { 
+        mouseDown = 0;
+        movingA = movingB = movingC = 0;
+    }
     
     // Updating and rendering scene
     update(gl);
