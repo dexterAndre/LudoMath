@@ -18,6 +18,8 @@
     - Add color property to the vectors, decreasing opacity for each light bounce
     - Make light bouncing a recursive function with max bounce times
     - Fix so that the r_d shows the correct amount of rays (minus 1?)
+    - For some reason, the refraction is different with different distances from the circle. Is this wrong? 
+    - Limits movement of points past the line
 
     1. Correct ray placement
     2. Varying density of rays

@@ -1,10 +1,20 @@
 "use strict"
 
-
-
 // WebGL
 var canvas;
 var gl;
+
+
+// HTML
+
+
+
+
+
+
+
+
+
 
 // Geometry
 var vertices = [

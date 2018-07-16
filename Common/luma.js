@@ -395,6 +395,26 @@ Vec3.prototype.rotate = function(s)
 //#endregion
 
 // ########## Geometry ##########
+//#region LineSeg
+function LineSeg(a, b) { this.a = a; this.b = b; }
+LineSeg.prototype.magnitude = function() 
+{
+    var m = 0; 
+    for (var comp in this) 
+    { 
+        m += Math.pow(comp, 2);
+    } 
+    return Math.sqrt(m); 
+}
+LineSeg.prototype.midPoint = function() 
+{
+    return (this.a.add(this.b.sub(this.a)).mul(0.5));
+};
+LineSeg.prototype.lerp = function(t) { return this.a.add(this.b.sub(this.a).mul(t)); }
+//#endregion
+function Line(p, v) { this.p = p; this.v = v; }
+//#region Line
+//#endregion
 //#region Tri
 function Tri(a, b, c) { this.a = a; this.b = b; this.c = c; }
 Tri.prototype.containsPoint = function(v)
