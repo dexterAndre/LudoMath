@@ -6,54 +6,69 @@ var gl;
 
 
 // HTML
+var btnPoint;
+var btnLine;
+var btnCircle;
+var btnPolygon;
+var btnVector;
+
+// Settings
+//  Graphics
+var graphicsResolutionPoint = 8;
+
+
+// Scene
+var scene = [];
+var gizmos = [];
+var objects = [];
 
 
 
 
 
-
-
-
-
-
-// Geometry
-var vertices = [
-    -0.5, 0.5, 
-    -0.5, -0.5, 
-    0.0, -0.5,
-];
-var axis_x = [
-    -1.0, 0.5, 
-    1.0, 0.5,
-];
-var axis_y = [
-    0.5, -1.0, 
-    0.5, 1.0,
-];
 
 // Shader code
 var vertexShaderCode = `
-attribute vec2 coordinates;
+attribute vec3 vCoordinates;
+attribute vec4 vColor;
+
+varying vec4 fColor;
 
 void main(void)
 {
+    fColor = vColor;
     gl_Position = vec4(coordinates, 0.0, 1.0);
 }
 `;
 var fragmentShaderCode = `
+varying fColor;
+
 void main(void)
 {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);
+    gl_FragColor = fColor;
 }
 `
 
 
 
+function initWebGL()
+{
+    canvas = this.document.getElementById("gl-canvas");
+    gl = canvas.getContext("experimental-webgl");
+};
+
+function initGeometry()
+{
+    
+};
+
 window.onload = function initialize()
 {
     // Set up WebGL
-    canvas = this.document.getElementById("gl-canvas");
-    gl = canvas.getContext("experimental-webgl");
+    initWebGL();
+
+    initGeometry();
+
 
     // Buffers
     var vertexBuffer = gl.createBuffer();
