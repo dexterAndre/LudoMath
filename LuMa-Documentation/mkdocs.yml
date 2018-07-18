@@ -1,5 +1,8 @@
 site_name: LuMa Documentation
 pages: 
   - Home: index.md
-  - About: about.md
+  - Numbers: numbers.md
+  - Linear Algebra: linear-algebra.md
+  - Geometry: geometry.md
+  - Functions: functions.md
 theme: readthedocs
