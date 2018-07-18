@@ -1,8 +1,10 @@
-# Constants
-Look-up table of useful constants. Some values have several names, like TAUOVER4 and PIOVER2. You can use either, but I recommend using the TAU versions. The PI versions are just there for legacy reasons. Example usage: 
+Look-up table of useful constants. Some values have several names, like TAUOVER4 and PIOVER2. You can use either, but I recommend using the TAU versions because they make more intuitive sense compared to the PI versions. The PI versions are just there for legacy reasons. 
+
+Example usage: 
 ```
-var foo = luma.SQRT2OVER2;
-var bar = luma.PIOVER6 / 2;
+var fus = luma.SQRT2OVER2;
+var ro = luma.TAU > luma.PI ? true : false;
+var dah = luma.TAUOVER4 == luma.PIOVER4 ? true : false;
 ```
 
 ## Numeric Constants

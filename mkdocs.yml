@@ -1,13 +1,59 @@
 site_name: LuMa Documentation
 pages: 
   - Home: index.md
-  - Numbers: numbers.md
-  - Linear Algebra: linear-algebra.md
-  - Geometry: geometry.md
-  - Functions: functions.md
-theme: readthedocs
+  - Numbers & Algebra: 
+    - 'Constants': NA/Constants.md
+    - 'Numeric Functions': NA/Numeric Functions.md
+    - 'Series & Patterns': NA/Series.md
+    - 'Complex Numbers': NA/Complex Numbers.md
+    - 'Statistics': NA/Statistics.md
+  - Linear Algebra: 
+    - Vectors: 
+      - Classes:
+        - 'Vec2': LA/Vec2.md
+        - 'Vec3': LA/Vec3.md
+        - 'Vec4': LA/Vec4.md
+      - Operations: 
+        - 'Vector Addition': LA/vectorAddition.md
+        - 'Vector Subtraction': LA/vectorSubtraction.md
+        - 'Scalar Multiplication': LA/vectorScalarMultiplication.md
+        - 'Scalar Division': LA/vectorScalarDivision.md
+        - 'Negation': LA/vectorNegation.md
+        - 'Lerp': LA/vectorLerp.md
+        - 'Nlerp': LA/vectorNlerp.md
+        - 'Slerp': LA/vectorSlerp.md
+        - 'Dot': LA/vectorDot.md
+        - 'Cross': LA/vectorCross.md
+        - 'Wedge': LA/vectorWedge.md
+        - 'Magnitude': LA/vectorMagnitude.md
+        - 'Magnitude Squared': LA/vectorMagnitudeSquared.md
+        - 'Normalization': LA/vectorNormalization.md
+        - 'Angle': LA/vectorAngle.md
+        - 'AngleDirected': LA/vectorAngleDirected.md
+        - 'Projection': LA/vectorProjection.md
+        - 'Rejection': LA/vectorRejection.md
+        - 'Reflection': LA/vectorReflection.md
+        - 'Refraction': LA/vectorRefraction.md
+    - Matrices: 
+      - 'Classes': LA/matrixClasses.md
+      - 'Operations': LA/matrixOperations.md
+    - Quaternions: 
+      - 'Classes': LA/quaternionClasses.md
+      - 'Operations': LA/quaternionOperations.md
+  - Geometry: 
+    - 'Geometric Objects': GEO/Geometric Objects.md
+    - 'Intersection Testing': GEO/Intersection Testing.md
+  - Functions & Curves: 
+    - 'Expressions': FC/Expressions.md
+    - 'Calculus': FC/Calculus.md
+  - Discrete Mathematics: 
+    - 'Sequences & Series': DM/Sequences and Series.md
+    - 'Patterns': DM/Patterns.md
+    - 'Procedural Generation': DM/Procedural Generation.md
+# theme: readthedocs
 markdown_extesions:
   - pymdownx.arithmatex
 extra_javascript:
   # - mathjax-config.js # Used for equation numbering
   - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+extra_css: [extra.css]

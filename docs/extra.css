@@ -1,0 +1,21 @@
+.green
+{
+    text-align: center;
+    color: #67CD63;
+}
+.red
+{
+    text-align: center;
+    color: #FF7878;
+}
+
+.h1less
+{
+    font-size: 42px;
+    font-weight: 400;
+}
+.h2less
+{
+    font-size: 30px;
+    font-weight: 300;
+}
