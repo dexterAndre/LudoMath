@@ -23,3 +23,9 @@
     font-size: 30px;
     font-weight: 300;
 }
+
+.col-md-9 .imgCentered
+{
+    display: block;
+    margin: 0 auto;
+}

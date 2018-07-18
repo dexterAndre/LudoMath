@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LudoMath - Vectors</title>
+        <link rel="canonical" href="ludomath.net"/>
+        <script type="text/javascript">
+            var host = "ludomath.net";
+            if ((host == window.location.host) && (window.location.protocol != "https:"))
+            {
+                window.location.protocol = "https";
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" media="screen" href="../Common/ludomath.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+        <script type="text/javascript" src="../Common/luma.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <button id="btn-brand">LudoMath</button>
+                <button id="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+                <input id="inp-search" type="text" placeholder="Search"/>
+                <button id="btn-profile">Profile <i class="fas fa-user"></i></button>
+            </div>
+        </div>
+        <div class="base">
+            <div class="breadcrumbs">
+                    <a href="../index.html">Home</a>
+                    <i class="fas fa-angle-double-right"></i>
+                    <a href="index.html">Linear Algebra</a>
+                    <i class="fas fa-angle-double-right"></i>
+                    <a href="">Vectors</a>
+            </div>
+            <div class="content">
+                <h1>Introduction to Vectors</h1>
+                <p>
+                    Simply put, vectors can be interpreted as arrows. More specifically, they are geometric objects that hold information about direction and magnitude. By <i>magnitude</i>, we mean "length along its own direction". They are used extensively throughout almost all fields of game development: movement, shading, collision, and lighting models all rely heavily on the use of vectors. 
+                </p>
+                <p class="box-info">
+                    Vectors are geometric objects that has both direction and magnitude. 
+                </p>
+                <h2>Notation</h2>
+                <p>
+                    When we write vectors on paper, we usually want to specify its name and its contents. Different texts use different naming conventions and markup style. Some textbooks - especially older ones - use the bolded notation to write the name of the vector, with standard parentheses to contain its information: \({\bf a} = (3, 4)\).
+                </p>
+                <p>
+                    We will avoid this type of notation in LudoMath, in favor of the overhead arrow and square brackets: \(\overrightarrow{a} = [3, 4]\). 
+                </p>
+                <p>
+                    The notation mentioned above writes vectors in one line as a row-vector. You could also write them vertically as column-vectors: 
+                </p>
+                <p>
+                    $$\overrightarrow{a} = \begin{bmatrix}3 \\ 4 \end{bmatrix}$$
+                </p>
+                <p>
+                    There is no informational difference between the two notations, but there are other reasons for choosing to use column-vector instead of row-vector notation. We will see  thatin the section on matrices later on. For now, we'll keep using row-vector notation. 
+                </p>
+                <h2>Geometric Meaning</h2>
+                <p>
+                    Vectors are first and foremost geometric objects. They represent a direction and magnitude in some dimension. We can choose any dimension we want, but in game development, we usually end up using 2D, 3D, and 4D vectors. Why do we use four-dimensional vectors? We will get back to that in the chapter on <i>transformations</i>. We will be working exclusively with 2D and 3D vectors in this section. Bear in mind that most vector concepts carry over into higher dimensions, although there are some operations that are only to be found in certain dimensions. This will be clearly communicated whenever that is the case. 
+                </p>
+                <p>
+                    Based on the definition above, vectors only contain information about direction and magnitude, but where is the information about its position? If we want to plot a vector in a coordinate system, we have to know its position, right? By definition, vectors do not hold any information about position, so mathematicians have accepted that we can place vectors anywhere in the coordinate system we want to, without affecting its geometric meaning. This is an important concept to learn. 
+                </p>
+                <p class="box-info">
+                    Vectors are not bound to any position. Placing a vector in a different position will not change its geometric meaning. 
+                </p>
+                <p>
+                    If you've touched a game engine framework before, you have probably used vectors to convey information about points. Mathematically, this is invalid, because vectors aren't points, and should not be treated in the same way as points. We will see some differences in the section about transformations later on. But programmatically, vectors contain the same amount of - and the same data types of - information. A 3D vector will usually contain three floats, and a 3D point will contain the same. 
+                </p>
+                <p>
+                    We can perform some operations between vectors and points, and the table below shows the resulting object type: 
+                </p>
+                <ul>
+                    <li>Vector + vector = vector</li>
+                    <li>Point + point = undefined</li>
+                    <li>Point + vector = point</li>
+                </ul>
+                <p>
+                    One argument for having no programmatic separation between vectors and points, is that we no longer have to convert between the two. Their geometric meaning still haven't changed, and it is up to the programmer to make those disctinctions. 
+                </p>
+                <h2>Forms</h2>
+                <p>
+                    In addition to writing vectors differently, we can also express them via different kinds of information. 
+                </p>
+                <p>
+                    In most game engines, you will be writing them in <i>Cartesian form</i>, which contains information about the x-, y-, and z-components along the coordinate axes. 
+                </p>
+                <p>
+                    Sometimes, you also just want to express vectors directly by what 
+                </p>
+
+
+                <h1>Vector Operations</h1>
+                <p>
+                    Sometimes there will be differences between vector operations in different dimensions. For easier visualization, we will keep to using 2D and 3D vectors, and all the following examples will be explained for those dimensions. Whenever there are important differences, like in the cross product, we will clearly outline them. For most operations, the concept will easily carry over from 2D to 3D, and also into higher dimensions. 
+                </p>
+                <p>
+                    Remember that we can perform certain operations on two vectors, but also some operations between vectors and points, or between vectors and regular numbers. Before we start, we give a name to these "regular numbers": <i>scalars</i>. Scalars are the numbers you've been working with most of your life, for example 1, 0, 999.9, -17, \(-\frac{1}{12}\), \(\pi\), and <i>e</i>. 
+                </p>
+                <h1>Addition and Subtraction</h1>
+                <h1>Scalar Multiplication</h1>
+                <h1>Dot Product (AKA Scalar Product)</h1>
+                <h1>Cross Product (AKA Cross Product)</h1>
+                <h1>Wedge Product (AKA Exterior Product)</h1>
+                <p>
+                    Before starting this section, know that the wedge product is used only in the more advanced situations, and a typical game programmer will likely not have to work with it. You can safely regard this operation as "for the especially interested", and skip over to the next section if you want more immediate uses of the operations mentioned above. 
+                </p>
+
+                <h1>Vector Techniques</h1>
+                <p>
+                    This section is an extension of the previous section. Here, we introduce some more things you can do with vectors, but these "techniques" are not operations. Instead, they use some of the previously defined operations in order to carry out their purpose. Needless to say, this section requires that you are familiar with the previous section to a large degree. 
+                </p>
+                <h2></h2>
+                <h2>Angle Between Two Vectors</h2>
+                
+                <h3>Directed Angle in 2D</h3>
+                <p>
+                    In some cases, it is important to know the directed angle between two vectors. This will be utilized in the <i>refraction</i> formula, for example. 
+                </p>
+
+                <h2>Projection</h2>
+                <h2>Rejection</h2>
+                <h2>Reflection</h2>
+                <h2>Refraction</h2>
+                <p>
+                    Refraction occurs when light passes from one medium to another. More specifically, when those two media have different indices of refraction. An index of refraction can be thought of as a measurement of how fast light moves within a medium. That's not the entire truth physically, but because game engines run in real-time, we have to make simplifications. It looks like this: 
+                </p>
+                <p>
+                    [Insert figure here.]
+                </p>
+                <p>
+                    How much does the vector bend upon entering the new medium? To calculate the refracted vector, we need four pieces of information: 
+                </p>
+                <ul>
+                    <li>Incident vector</li>
+                    <li>Normal vector</li>
+                    <li>Refractive index of the first medium</li>
+                    <li>Refractive index of the second medium</li>
+                </ul>
+                <p>
+                    Look at the figure above. If we know the incident vector and the normal, then we can easily find the angle between them. All that remains now is to find the angle between the negated normal and the refracted vector. There is a formula we can use to find that - Snell's law: 
+                </p>
+                <p>
+                    $$n_1 \cdot sin(\theta_1) = n_2 \cdot sin(\theta_2)$$
+                </p>
+
+                <p>Refraction playbox:</p>
+                <div class="interactive-canvas">
+                    <canvas id="canvas-refraction-circle" width="512" height="512"></canvas>
+                    <div class="sliderContainer">
+                        <p class="description">\(r_d\): ray density. How many rays shoot out of the red line segment. </p>
+                        <p class="description">\(n_1\): Index of refraction 1, in the outside area. </p>
+                        <p class="description">\(n_2\): Index of refraction 2, inside the circle. </p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(r_d\):</p>
+                        <input type="range" id="sliderRD" class="slider" onmousemove="update(gl)" min="1" max="100" value="1">
+                        <p class="variableValue" id="sliderRDText">1</p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(n_1\):</p>
+                        <input type="range" id="sliderN1" class="slider" onmousemove="update(gl)" min="0" max="400" value="100">
+                        <p class="variableValue" id="sliderN1Text">1</p>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="variableName">\(n_2\):</p>
+                        <input type="range" id="sliderN2" class="slider" onmousemove="update(gl)" min="0" max="400" value="123">
+                        <p class="variableValue" id="sliderN2Text">1</p>
+                    </div>
+                </div>
+
+                <p>Problem Ideas:</p>
+                <ul>
+                    <li>Calculate a single refraction angle</li>
+                    <li>Intuition: will the refracted vector's angle be larger or less than the incident angle?</li>
+                    <li>Calculate several refractions</li>
+                </ul>
+
+                <h1>Vector Applications</h1>
+                <p>
+                    This section is a collection of both abstract and situational cases for applying the vector mathematics we've learned so far. Sometimes, you have to combine many of the different operations. It is important to remember that vectors do not contain information about position while we are exploring these applications, and see vectors instead as directions with magnitude. 
+                </p>
+            </div>
+        </div>
+        <script type="text/javascript" src="../Simulations/refraction-circle.js"></script>
+    </body>
+</html>
