@@ -1,12 +1,16 @@
 .green
 {
     text-align: center;
-    color: #67CD63;
+    color: #79CE70;
 }
 .red
 {
     text-align: center;
     color: #FF7878;
+}
+.blue
+{
+    color: #78A5FF;
 }
 
 .h1less

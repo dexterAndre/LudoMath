@@ -1,12 +1,15 @@
-site_name: LuMa Documentation
+site_name: LuMa.js Docs
 pages: 
   - Home: index.md
-  - Numbers & Algebra: 
+  - Numbers: 
     - 'Constants': NA/Constants.md
     - 'Numeric Functions': NA/Numeric Functions.md
     - 'Series & Patterns': NA/Series.md
     - 'Complex Numbers': NA/Complex Numbers.md
     - 'Statistics': NA/Statistics.md
+    - 'Sequences & Series': NA/Sequences and Series.md
+    - 'Patterns': NA/Patterns.md
+    - 'Procedural Generation': NA/Procedural Generation.md
   - Linear Algebra: 
     - Vectors: 
       - Classes:
@@ -14,6 +17,7 @@ pages:
         - 'Vec3': LA/Vec3.md
         - 'Vec4': LA/Vec4.md
       - Operations: 
+        - 'Vector Operations': LA/vectorOperations.md
         - 'Vector Addition': LA/vectorAddition.md
         - 'Vector Subtraction': LA/vectorSubtraction.md
         - 'Scalar Multiplication': LA/vectorScalarMultiplication.md
@@ -22,9 +26,9 @@ pages:
         - 'Lerp': LA/vectorLerp.md
         - 'Nlerp': LA/vectorNlerp.md
         - 'Slerp': LA/vectorSlerp.md
-        - 'Dot': LA/vectorDot.md
-        - 'Cross': LA/vectorCross.md
-        - 'Wedge': LA/vectorWedge.md
+        - 'Dot (Scalar Product)': LA/vectorDot.md
+        - 'Cross (Vector Product)': LA/vectorCross.md
+        - 'Wedge (Exterior Product)': LA/vectorWedge.md
         - 'Magnitude': LA/vectorMagnitude.md
         - 'Magnitude Squared': LA/vectorMagnitudeSquared.md
         - 'Normalization': LA/vectorNormalization.md
@@ -43,13 +47,9 @@ pages:
   - Geometry: 
     - 'Geometric Objects': GEO/Geometric Objects.md
     - 'Intersection Testing': GEO/Intersection Testing.md
-  - Functions & Curves: 
+  - Functions: 
     - 'Expressions': FC/Expressions.md
     - 'Calculus': FC/Calculus.md
-  - Discrete Mathematics: 
-    - 'Sequences & Series': DM/Sequences and Series.md
-    - 'Patterns': DM/Patterns.md
-    - 'Procedural Generation': DM/Procedural Generation.md
 # theme: readthedocs
 markdown_extesions:
   - pymdownx.arithmatex
