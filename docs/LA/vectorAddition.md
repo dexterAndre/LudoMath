@@ -24,7 +24,9 @@ console.log("a: ", a);
 ```
 
 ### Example (Visual)
-
+<p>Given the two vectors \\(\overrightarrow{a} = [3, 4]\\) and \\(\overrightarrow{b} = [-2, 1]\\), </p>
+<img src="imgs/vectorAdditionVariables.png">
+<p>let \\(\overrightarrow{c} = \overrightarrow{a} + \overrightarrow{b}\\). </p>
 
 ## Properties of Vector Addition
 Returns | Operands | Validity | Cost | Commutative | Associative | Distributive

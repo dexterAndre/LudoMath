@@ -50,6 +50,10 @@ pages:
   - Functions: 
     - 'Expressions': FC/Expressions.md
     - 'Calculus': FC/Calculus.md
+docs:
+  docs/
+    imgs/
+      vectorAdditionVariables.png
 # theme: readthedocs
 markdown_extesions:
   - pymdownx.arithmatex
