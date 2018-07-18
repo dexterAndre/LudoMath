@@ -1,0 +1,13 @@
+site_name: LuMa Documentation
+pages: 
+  - Home: index.md
+  - Numbers: numbers.md
+  - Linear Algebra: linear-algebra.md
+  - Geometry: geometry.md
+  - Functions: functions.md
+theme: readthedocs
+markdown_extesions:
+  - pymdownx.arithmatex
+extra_javascript:
+  # - mathjax-config.js # Used for equation numbering
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
