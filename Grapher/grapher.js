@@ -1,5 +1,14 @@
 "use strict"
 
+
+/*
+    To do: 
+    - Use vectors instead of several floats
+    - Convert stroke and fill size into pixel units (or point units?)
+    - Setting for stroke on inner, outer, or center (center by default)
+*/
+
+
 // WebGL
 var canvas;
 var gl;
@@ -38,9 +47,9 @@ var btnVector;
 // Settings
 //  Graphics
 //      Resolution
-var graphicsResolutionRoundness = 8;
-var graphicsRadiusRadiusOuter = 0.025;
-var graphicsRadiusRadiusInner = 0.020;
+var graphicsResolutionRoundness = 64;
+var graphicsRadiusRadiusOuter = 0.5;
+var graphicsRadiusRadiusInner = 0.25;
 //      Color
 var graphicsColorBackground = [0.922, 0.922, 0.922, 1.0];
 var graphicsColorFill = [1.0, 1.0, 1.0, 1.0];
@@ -64,57 +73,94 @@ function Mesh(object)
 
     this.meshPoint = function(object)
     {
-        var inner = [];
-        var outer = [];
+        var vertices = [];
         
         // Inner ring (including center point)
-        inner.push(object.x, object.y, object.z);
+        vertices.push(object.x, object.y, 0.0);
         var step = 0;
         var t1 = TAU / (graphicsResolutionRoundness * 2);   // Half-angle of every step
         for (var i = 0; i < graphicsResolutionRoundness; i++)
         {
             step = t1 + (i / graphicsResolutionRoundness) * TAU;
-            inner.push(
+            vertices.push(
                     object.x + graphicsRadiusRadiusInner * Math.cos(step),
                     object.y + graphicsRadiusRadiusInner * Math.sin(step),
                     0.0
                 );
         }
-        // Sorting inner array into fill array
-        for (var i = 0; i < graphicsResolutionRoundness + 1; i++)
-        {
-            this.fill.push(
-                inner[0 + i * 3], 
-                inner[1 + i * 3], 
-                inner[2 + i * 3],
-                graphicsColorFill[0], 
-                graphicsColorFill[1], 
-                graphicsColorFill[2], 
-                graphicsColorFill[3]);
-        }
-        this.fill.push(
-            inner[0 + 1 * 3], 
-            inner[1 + 1 * 3], 
-            inner[2 + 1 * 3],
-            graphicsColorFill[0], 
-            graphicsColorFill[1], 
-            graphicsColorFill[2], 
-            graphicsColorFill[3]);
-        
         // Outer ring (reusing some of the inner ring points)
         var step = 0;
         for (var i = 0; i < graphicsResolutionRoundness; i++)
         {
             step = (i / graphicsResolutionRoundness) * TAU;
-            outer.push(
+            vertices.push(
                     object.x + graphicsRadiusRadiusOuter * Math.cos(step),
                     object.y + graphicsRadiusRadiusOuter * Math.sin(step),
                     0.0
                 );
         }
-        // Sorting outer and inner into stroke array
-        // for (var i = 0; i < )
-        // CHECKPOINT
+
+        // Sorting inner array into fill array
+        // Ordered to render as gl.TRIANGLE_FAN
+        for (var i = 0; i < graphicsResolutionRoundness + 1; i++)
+        {
+            this.fill.push(
+                vertices[0 + i * 3], 
+                vertices[1 + i * 3], 
+                vertices[2 + i * 3],
+                graphicsColorFill[0], 
+                graphicsColorFill[1], 
+                graphicsColorFill[2], 
+                graphicsColorFill[3]
+            );
+        }
+        this.fill.push(
+            vertices[0 + 1 * 3], 
+            vertices[1 + 1 * 3], 
+            vertices[2 + 1 * 3],
+            graphicsColorFill[0], 
+            graphicsColorFill[1], 
+            graphicsColorFill[2], 
+            graphicsColorFill[3]
+        );
+        
+        // Sorting outer array into stroke array, also reusing some from the inner array
+        // Ordered to render as gl.TRIANGLE_STRIP
+        for (var i = 1; i < graphicsResolutionRoundness + 1; i++)
+        {
+            this.stroke.push(
+                vertices[0 + (i + graphicsResolutionRoundness) * 3],
+                vertices[1 + (i + graphicsResolutionRoundness) * 3],
+                vertices[2 + (i + graphicsResolutionRoundness) * 3],
+                graphicsColorPointStroke[0],
+                graphicsColorPointStroke[1],
+                graphicsColorPointStroke[2],
+                graphicsColorPointStroke[3],
+                vertices[0 + i * 3],
+                vertices[1 + i * 3],
+                vertices[2 + i * 3],
+                graphicsColorPointStroke[0],
+                graphicsColorPointStroke[1],
+                graphicsColorPointStroke[2],
+                graphicsColorPointStroke[3]
+            );
+        }
+        this.stroke.push(
+            vertices[0 + (1 + graphicsResolutionRoundness) * 3],
+            vertices[1 + (1 + graphicsResolutionRoundness) * 3],
+            vertices[2 + (1 + graphicsResolutionRoundness) * 3],
+            graphicsColorPointStroke[0],
+            graphicsColorPointStroke[1],
+            graphicsColorPointStroke[2],
+            graphicsColorPointStroke[3],
+            vertices[0 + 1 * 3],
+            vertices[1 + 1 * 3],
+            vertices[2 + 1 * 3],
+            graphicsColorPointStroke[0],
+            graphicsColorPointStroke[1],
+            graphicsColorPointStroke[2],
+            graphicsColorPointStroke[3]
+        );
         
         // Quick hack in order for the draw[Object] functions to recognize their own fill and stroke arrays. 
         fill2 = this.fill;
@@ -182,11 +228,9 @@ function Mesh(object)
         // initShaders();
     };
     this.assignMesh(object);
-    console.log("fill: ", this.fill);
     
     this.drawPoint = function()
     {
-        console.log("fill2: ", fill2);
         // Much of this code should happen at init time! 
         
         // Buffers
@@ -230,20 +274,19 @@ function Mesh(object)
         gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
         gl.enableVertexAttribArray(colorLoc);
         gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 2);
-        // gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         
-        // // Drawing stroke
-        // gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
-        // gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
-        // gl.enableVertexAttribArray(coordLoc);
-        // gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
-        // gl.enableVertexAttribArray(colorLoc);
-        // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        // // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness);
-        // gl.disableVertexAttribArray(coordLoc);
-        // gl.disableVertexAttribArray(colorLoc);
-        // gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        // Drawing stroke
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
+        gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
+        gl.enableVertexAttribArray(coordLoc);
+        gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
+        gl.enableVertexAttribArray(colorLoc);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness + 2);
+        // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness);
+        gl.disableVertexAttribArray(coordLoc);
+        gl.disableVertexAttribArray(colorLoc);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
     };
     this.drawLine = function()
     {
@@ -261,54 +304,6 @@ function Mesh(object)
     {
 
     };
-};
-Mesh.prototype.meshPoint = function(obj)
-{
-    // Do the same for the other functions!
-    var inner = [];
-    var outer = [];
-
-    // Inner ring (including center point)
-    inner.push(obj.x, obj.y, obj.z);
-    var step = 0;
-    var t1 = TAU / (graphicsResolutionRoundness * 2);   // Half-angle of every step
-    for (var i = 0; i < graphicsResolutionRoundness; i++)
-    {
-        step = t1 + (i / graphicsResolutionRoundness) * TAU;
-        inner.push(
-            obj.x + graphicsRadiusRadiusInner * Math.cos(step),
-            obj.y + graphicsRadiusRadiusInner * Math.sin(step),
-            0.0
-        );
-    }
-
-    // Outer ring (reusing some of the inner ring points)
-    var step = 0;
-    for (var i = 0; i < graphicsResolutionRoundness; i++)
-    {
-        step = (i / graphicsResolutionRoundness) * TAU;
-        outer.push(
-            obj.x + graphicsRadiusRadiusOuter * Math.cos(step),
-            obj.y + graphicsRadiusRadiusOuter * Math.sin(step),
-            0.0
-        );
-    }
-
-    // Buffers
-    //  Fill buffer
-    var bfr_fill = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bfr_fill);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(inner), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    // this.buffers[0] = bfr_fill;
-    //  Stroke buffer
-    var bfr_stroke = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, bfr_stroke);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(outer), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    // this.buffers[1] = bfr_stroke;
-
-    this.buffers = [bfr_fill, bfr_stroke];
 };
 
 function Point(x, y, z)
@@ -397,7 +392,7 @@ function initWebGL()
 
 function initTestScene()
 {
-    scene.push(new MathObject("pointA", new Point(0.1, 0.1, 0.0)));
+    scene.push(new MathObject("pointA", new Point(0.0, 0.0, 0.0)));
 };
 
 function updateGeometry()
