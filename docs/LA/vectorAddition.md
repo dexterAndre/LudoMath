@@ -1,12 +1,6 @@
 ## Vector Addition
 Adds two vectors together. Must be of same dimension. 
 
-## Legend
-* n: dimension
-* <span class="blue">this</span>: this vector
-* v: another vector
-* Superscripted operator (e.g. \\(2^+\\)): how many of said operation 
-
 ## Functions
 Name | Functionality
 - | - 
@@ -18,7 +12,7 @@ Returns | Operands | Validity | Cost | Commutative | Associative | Distributive
 - | - | - | - | - | - | - 
 Vector of same dimension | Binary | Vec2, Vec3, Vec4 | \\((n - 1)^+\\) | <p class="green">true</p> | <p class="green">true</p> | <p class="green">true</p>
 
-### Example (Code)
+## Example (Code)
 ```
 var a = new Vec2(3, 4);
 var b = new Vec2(-2, 1);
@@ -34,9 +28,15 @@ console.log("a: ", a);
 // Output: "a: Vec2 {x: 1, y: 5}"
 ```
 
-### Example (Visual)
+## Example (Visual)
 <p>Given two vectors \\(\overrightarrow{a} = [3, 4]\\) and \\(\overrightarrow{b} = [-2, 1]\\), </p>
 <img class="imgCentered" src="/imgs/vectorAdditionVariables.png">
 <p>let \\(\overrightarrow{c} = \overrightarrow{a} + \overrightarrow{b}\\), </p>
 <img class="imgCentered" src="/imgs/vectorAdditionOperation.png">
 <p>then \\(\overrightarrow{c} = [a_x + b_x, a_y + b_y] = [3 + (-2), 4 + 1] = [1, 5]\\).
+
+## Legend
+* n: dimension
+* <span class="blue">this</span>: this vector
+* v: another vector
+* Superscripted operator (e.g. \\(2^+\\)): how many of said operation 

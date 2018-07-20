@@ -4,6 +4,27 @@
 var canvas;
 var gl;
 
+// Shader code
+var vsObject = `
+attribute vec3 coordinates;
+attribute vec4 color;
+
+varying vec4 fColor;
+
+void main(void)
+{
+    fColor = color;
+    gl_Position = vec4(coordinates, 1.0);
+}
+`;
+var fsObject = `
+varying vec4 fColor;
+
+void main(void)
+{
+    gl_FragColor = fColor;
+}
+`;
 
 // HTML
 var btnPoint;
@@ -14,93 +35,353 @@ var btnVector;
 
 // Settings
 //  Graphics
-var graphicsResolutionPoint = 8;
-
+//      Resolution
+var graphicsResolutionRoundness = 8;
+var graphicsRadiusRadiusOuter = 0.025;
+var graphicsRadiusRadiusInner = 0.020;
+//      Color
+var graphicsColorBackground = [0.922, 0.922, 0.922, 1.0];
+var graphicsColorFill = [1.0, 1.0, 1.0, 1.0];
+var graphicsColorPointStroke = [0.471, 0.647, 1.0, 1.0];
+var graphicsColorLineStroke = [0.525, 0.827, 0.455, 1.0];
+var graphicsColorLineSegStroke = graphicsColorLineStroke;
+var graphicsColorRayStroke = graphicsColorLineStroke;
+var graphicsColorVectorStroke = [1.0, 0.471, 0.471, 1.0];
 
 // Scene
+function Mesh(object)
+{
+    // First buffer for fill, second buffer for stroke
+    this.buffers = assignMesh(object);
+
+    function assignMesh(obj)
+    {
+        switch (obj.constructor)
+        {
+            case Point:
+            {
+                return meshPoint(obj);
+            }
+            case Line:
+            {
+                return meshLine(obj);
+            }
+            case LineSeg:
+            {
+                return meshLineSeg(obj);
+            }
+            case Ray:
+            {
+                return meshRay(obj);
+            }
+            case Vector:
+            {
+                return meshVector(obj);
+            }
+        }
+    };
+    function meshPoint(object)
+    {
+        var inner = [];
+        var outer = [];
+
+        // Inner ring (including center point)
+        inner.push(object.x, object.y, object.z);
+        var step = 0;
+        var t1 = TAU / (graphicsResolutionRoundness * 2);   // Half-angle of every step
+        for (var i = 0; i < graphicsResolutionRoundness; i++)
+        {
+            step = t1 + (i / graphicsResolutionRoundness) * TAU;
+            inner.push(
+                object.x + graphicsRadiusRadiusInner * Math.cos(step),
+                object.y + graphicsRadiusRadiusInner * Math.sin(step),
+                0.0
+            );
+        }
+
+        // Outer ring (reusing some of the inner ring points)
+        var step = 0;
+        for (var i = 0; i < graphicsResolutionRoundness; i++)
+        {
+            step = (i / graphicsResolutionRoundness) * TAU;
+            outer.push(
+                object.x + graphicsRadiusRadiusOuter * Math.cos(step),
+                object.y + graphicsRadiusRadiusOuter * Math.sin(step),
+                0.0
+            );
+        }
+
+        // Buffers
+        //  Fill buffer
+        var bfr_fill = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, bfr_fill);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(inner), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        // this.buffers[0] = bfr_fill;
+        //  Stroke buffer
+        var bfr_stroke = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, bfr_stroke);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(outer), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        // this.buffers[1] = bfr_stroke;
+
+        return [bfr_fill, bfr_stroke];
+    };
+    function meshLine(object)
+    {
+
+    };
+    function meshLineSeg(object)
+    {
+
+    };
+    function meshRay(object)
+    {
+
+    };
+    function meshVector(object)
+    {
+
+    };
+
+    function drawPoint()
+    {
+        // Shaders
+        var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vsObject);
+        gl.compileShader(vertexShader);
+
+        var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fsObject);
+        gl.compileShader(fragmentShader);
+
+        var shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+        gl.useProgram(shaderProgram);
+
+        const coordLoc = gl.getAttribLocation(shaderProgram, "coordinates");
+        const colorLoc = gl.getAttribLocation(shaderProgram, "color");
+
+        // Drawing fill
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[0]);
+        gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
+        gl.enableVertexAttribArray(coordLoc);
+        gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
+        gl.enableVertexAttribArray(colorLoc);
+
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 1);
+
+        // Drawing stroke
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[1]);
+        gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
+        gl.enableVertexAttribArray(coordLoc);
+        gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
+        gl.enableVertexAttribArray(colorLoc);
+
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness);
+    };
+    function drawLine()
+    {
+
+    };
+    function drawLineSeg()
+    {
+
+    };
+    function drawRay()
+    {
+
+    };
+    function drawVector()
+    {
+
+    };
+};
+Mesh.prototype.meshPoint = function(obj)
+{
+    // Do the same for the other functions!
+    var inner = [];
+    var outer = [];
+
+    // Inner ring (including center point)
+    inner.push(obj.x, obj.y, obj.z);
+    var step = 0;
+    var t1 = TAU / (graphicsResolutionRoundness * 2);   // Half-angle of every step
+    for (var i = 0; i < graphicsResolutionRoundness; i++)
+    {
+        step = t1 + (i / graphicsResolutionRoundness) * TAU;
+        inner.push(
+            obj.x + graphicsRadiusRadiusInner * Math.cos(step),
+            obj.y + graphicsRadiusRadiusInner * Math.sin(step),
+            0.0
+        );
+    }
+
+    // Outer ring (reusing some of the inner ring points)
+    var step = 0;
+    for (var i = 0; i < graphicsResolutionRoundness; i++)
+    {
+        step = (i / graphicsResolutionRoundness) * TAU;
+        outer.push(
+            obj.x + graphicsRadiusRadiusOuter * Math.cos(step),
+            obj.y + graphicsRadiusRadiusOuter * Math.sin(step),
+            0.0
+        );
+    }
+
+    // Buffers
+    //  Fill buffer
+    var bfr_fill = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bfr_fill);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(inner), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    // this.buffers[0] = bfr_fill;
+    //  Stroke buffer
+    var bfr_stroke = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bfr_stroke);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(outer), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    // this.buffers[1] = bfr_stroke;
+
+    this.buffers = [bfr_fill, bfr_stroke];
+};
+
+function Point(x, y, z)
+{
+    this.x = x;
+    this.y = y;
+    this.z = z;
+};
+function Line(p1, p2)
+{
+    this.a = p1;
+    this.a = p2;
+};
+function LineSeg(p1, p2)
+{
+    this.a = p1;
+    this.a = p2;
+};
+function Ray(p, v)
+{
+    this.P = p;
+    this.v = v;
+};
+function Vector(x, y, z)
+{
+    this.x = x;
+    this.y = y;
+    this.z = z;
+};
+function MathObject(name, data)
+{
+    this.name = name;
+    this.data = data;
+    this.mesh = new Mesh(data);
+    this.draw = assignDrawCall(data, this.mesh);
+    
+    // Assigning correct draw call based on data type
+    function assignDrawCall(obj, mesh)
+    {
+        switch (obj.constructor)
+        {
+            case Point:
+            {
+                // This is where you left off! Cannot assign this.draw to the function belonging to the Mesh class. 
+                return Mesh.drawPoint;
+                break;
+            }
+            case Line:
+            {
+                return mesh.drawLine;
+                break;
+            }
+            case LineSeg:
+            {
+                return mesh.drawLineSeg;
+                break;
+            }
+            case Ray:
+            {
+                return mesh.drawRay;
+                break;
+            }
+            case Vector:
+            {
+                return mesh.drawVector;
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+    }
+};
 var scene = [];
 var gizmos = [];
-var objects = [];
 
-
-
-
-
-
-// Shader code
-var vertexShaderCode = `
-attribute vec3 vCoordinates;
-attribute vec4 vColor;
-
-varying vec4 fColor;
-
-void main(void)
-{
-    fColor = vColor;
-    gl_Position = vec4(coordinates, 0.0, 1.0);
-}
-`;
-var fragmentShaderCode = `
-varying fColor;
-
-void main(void)
-{
-    gl_FragColor = fColor;
-}
-`
 
 
 
 function initWebGL()
 {
-    canvas = this.document.getElementById("gl-canvas");
+    canvas = document.getElementById("gl-canvas");
     gl = canvas.getContext("experimental-webgl");
 };
 
-function initGeometry()
+function initTestScene()
+{
+    scene.push(new MathObject("pointA", new Point(0.1, 0.1, 0.0)));
+};
+
+function updateGeometry()
 {
     
 };
 
-window.onload = function initialize()
+function updateBuffers(gl)
 {
-    // Set up WebGL
-    initWebGL();
 
-    initGeometry();
+};
 
+function draw()
+{
+    for (var i = 0; i < scene.length; i++)
+    {
+        scene[i].draw();
+    }
+    for (var i = 0; i < gizmos.length; i++)
+    {
 
-    // Buffers
-    var vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    }
+};
 
-    // Shaders
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, vertexShaderCode);
-    gl.compileShader(vertexShader);
-
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fragmentShaderCode);
-    gl.compileShader(fragmentShader);
-
-    var shaderProgram = gl.createProgram();
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-    gl.useProgram(shaderProgram);
-
-    // Associate shader program to buffer objects
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    var coordinatesLoc = gl.getAttribLocation(shaderProgram, "coordinates");
-    gl.vertexAttribPointer(coordinatesLoc, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(coordinatesLoc);
-
-    // Draw geometry
+function render(gl)
+{
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    updateBuffers(gl);
+    draw();
+};
+
+function update(gl)
+{
+    // Updating input
+    // Updating HTML DOM display values
+    updateGeometry();
+    render(gl);
+};
+
+window.onload = function initialize()
+{
+    initWebGL();
+    initTestScene();
+    update(gl);
+    render(gl);
 }

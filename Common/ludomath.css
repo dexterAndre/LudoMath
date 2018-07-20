@@ -52,7 +52,7 @@ body
 
     height: 32px;
 
-    background-color: #597DA6;
+    background-color: #3782ED;
 }
 
 .header-content
@@ -178,11 +178,15 @@ h2
 .content #list-topics a
 {
     font-size: 1.25em;
-    color: #373737;
-
+    color: #78A5FF;
+    
     transition: color 0.2s ease-out;
     --webkit-transition: color 0.2s ease-out;
     --moz-transition: color 0.2s ease-out;
+}
+.content .list-topics .broken-link
+{
+    color: gray;
 }
 #link-NA:hover
 {
