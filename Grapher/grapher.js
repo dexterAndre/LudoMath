@@ -18,6 +18,8 @@ void main(void)
 }
 `;
 var fsObject = `
+precision mediump float;
+
 varying vec4 fColor;
 
 void main(void)
@@ -52,39 +54,19 @@ var graphicsColorVectorStroke = [1.0, 0.471, 0.471, 1.0];
 function Mesh(object)
 {
     // First buffer for fill, second buffer for stroke
-    this.buffers = assignMesh(object);
+    this.fill = [];
+    var fill2;
+    this.stroke = [];
+    var stroke2;
 
-    function assignMesh(obj)
-    {
-        switch (obj.constructor)
-        {
-            case Point:
-            {
-                return meshPoint(obj);
-            }
-            case Line:
-            {
-                return meshLine(obj);
-            }
-            case LineSeg:
-            {
-                return meshLineSeg(obj);
-            }
-            case Ray:
-            {
-                return meshRay(obj);
-            }
-            case Vector:
-            {
-                return meshVector(obj);
-            }
-        }
-    };
-    function meshPoint(object)
+    this.fillBuffer;
+    this.strokeBuffer;
+
+    this.meshPoint = function(object)
     {
         var inner = [];
         var outer = [];
-
+        
         // Inner ring (including center point)
         inner.push(object.x, object.y, object.z);
         var step = 0;
@@ -93,64 +75,139 @@ function Mesh(object)
         {
             step = t1 + (i / graphicsResolutionRoundness) * TAU;
             inner.push(
-                object.x + graphicsRadiusRadiusInner * Math.cos(step),
-                object.y + graphicsRadiusRadiusInner * Math.sin(step),
-                0.0
-            );
+                    object.x + graphicsRadiusRadiusInner * Math.cos(step),
+                    object.y + graphicsRadiusRadiusInner * Math.sin(step),
+                    0.0
+                );
         }
-
+        // Sorting inner array into fill array
+        for (var i = 0; i < graphicsResolutionRoundness + 1; i++)
+        {
+            this.fill.push(
+                inner[0 + i * 3], 
+                inner[1 + i * 3], 
+                inner[2 + i * 3],
+                graphicsColorFill[0], 
+                graphicsColorFill[1], 
+                graphicsColorFill[2], 
+                graphicsColorFill[3]);
+        }
+        this.fill.push(
+            inner[0 + 1 * 3], 
+            inner[1 + 1 * 3], 
+            inner[2 + 1 * 3],
+            graphicsColorFill[0], 
+            graphicsColorFill[1], 
+            graphicsColorFill[2], 
+            graphicsColorFill[3]);
+        
         // Outer ring (reusing some of the inner ring points)
         var step = 0;
         for (var i = 0; i < graphicsResolutionRoundness; i++)
         {
             step = (i / graphicsResolutionRoundness) * TAU;
             outer.push(
-                object.x + graphicsRadiusRadiusOuter * Math.cos(step),
-                object.y + graphicsRadiusRadiusOuter * Math.sin(step),
-                0.0
-            );
+                    object.x + graphicsRadiusRadiusOuter * Math.cos(step),
+                    object.y + graphicsRadiusRadiusOuter * Math.sin(step),
+                    0.0
+                );
         }
+        // Sorting outer and inner into stroke array
+        // for (var i = 0; i < )
+        // CHECKPOINT
+        
+        // Quick hack in order for the draw[Object] functions to recognize their own fill and stroke arrays. 
+        fill2 = this.fill;
+        stroke2 = this.stroke;
+    };
+    this.meshLine = function(object)
+    {
+        
+    };
+    this.meshLineSeg = function(object)
+    {
+        
+    };
+    this.meshRay = function(object)
+    {
+        
+    };
+    this.meshVector = function(object)
+    {
+        
+    };
+    this.generateBuffers = function()
+    {
+        
+    };
+    this.initShaders = function()
+    {
 
+    };
+    this.assignMesh = function(obj)
+    {
+        switch (obj.constructor)
+        {
+            case Point:
+            {
+                this.meshPoint(obj);
+                this.generateBuffers();
+                return;
+            }
+            case Line:
+            {
+                this.meshLine(obj);
+                this.generateBuffers();
+                return;
+            }
+            case LineSeg:
+            {
+                this.meshLineSeg(obj);
+                this.generateBuffers();
+                return;
+            }
+            case Ray:
+            {
+                this.meshRay(obj);
+                this.generateBuffers();
+                return;
+            }
+            case Vector:
+            {
+                this.meshVector(obj);
+                this.generateBuffers();
+                return;
+            }
+        }
+        // initShaders();
+    };
+    this.assignMesh(object);
+    console.log("fill: ", this.fill);
+    
+    this.drawPoint = function()
+    {
+        console.log("fill2: ", fill2);
+        // Much of this code should happen at init time! 
+        
         // Buffers
         //  Fill buffer
         var bfr_fill = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, bfr_fill);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(inner), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(fill2), gl.STATIC_DRAW);
+        this.fillBuffer = bfr_fill;
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        // this.buffers[0] = bfr_fill;
         //  Stroke buffer
         var bfr_stroke = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, bfr_stroke);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(outer), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(stroke2), gl.STATIC_DRAW);
+        this.strokeBuffer = bfr_stroke;
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        // this.buffers[1] = bfr_stroke;
 
-        return [bfr_fill, bfr_stroke];
-    };
-    function meshLine(object)
-    {
-
-    };
-    function meshLineSeg(object)
-    {
-
-    };
-    function meshRay(object)
-    {
-
-    };
-    function meshVector(object)
-    {
-
-    };
-
-    function drawPoint()
-    {
         // Shaders
         var vertexShader = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(vertexShader, vsObject);
         gl.compileShader(vertexShader);
-
+        
         var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
         gl.shaderSource(fragmentShader, fsObject);
         gl.compileShader(fragmentShader);
@@ -159,42 +216,48 @@ function Mesh(object)
         gl.attachShader(shaderProgram, vertexShader);
         gl.attachShader(shaderProgram, fragmentShader);
         gl.linkProgram(shaderProgram);
+        
+        
+        // Setting attributes
         gl.useProgram(shaderProgram);
-
-        const coordLoc = gl.getAttribLocation(shaderProgram, "coordinates");
-        const colorLoc = gl.getAttribLocation(shaderProgram, "color");
-
+        
         // Drawing fill
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[0]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.fillBuffer);
+        const coordLoc = gl.getAttribLocation(shaderProgram, "coordinates");
         gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
         gl.enableVertexAttribArray(coordLoc);
+        const colorLoc = gl.getAttribLocation(shaderProgram, "color");
         gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
         gl.enableVertexAttribArray(colorLoc);
-
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 1);
-
-        // Drawing stroke
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers[1]);
-        gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
-        gl.enableVertexAttribArray(coordLoc);
-        gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
-        gl.enableVertexAttribArray(colorLoc);
-
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness);
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 2);
+        // gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 1);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        
+        // // Drawing stroke
+        // gl.bindBuffer(gl.ARRAY_BUFFER, this.strokeBuffer);
+        // gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 4 * 7, 0);
+        // gl.enableVertexAttribArray(coordLoc);
+        // gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
+        // gl.enableVertexAttribArray(colorLoc);
+        // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        // // gl.drawArrays(gl.TRIANGLE_STRIP, 0, 2 * graphicsResolutionRoundness);
+        // gl.disableVertexAttribArray(coordLoc);
+        // gl.disableVertexAttribArray(colorLoc);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, null);
     };
-    function drawLine()
+    this.drawLine = function()
     {
 
     };
-    function drawLineSeg()
+    this.drawLineSeg = function()
     {
 
     };
-    function drawRay()
+    this.drawRay = function()
     {
 
     };
-    function drawVector()
+    this.drawVector = function()
     {
 
     };
@@ -280,37 +343,35 @@ function MathObject(name, data)
     this.name = name;
     this.data = data;
     this.mesh = new Mesh(data);
-    this.draw = assignDrawCall(data, this.mesh);
-    
-    // Assigning correct draw call based on data type
-    function assignDrawCall(obj, mesh)
+    this.draw;
+    this.assignDrawCall = function(obj, mesh)
     {
+        var instance = obj.constructor;
         switch (obj.constructor)
         {
             case Point:
             {
-                // This is where you left off! Cannot assign this.draw to the function belonging to the Mesh class. 
-                return Mesh.drawPoint;
+                this.draw = mesh.drawPoint;
                 break;
             }
             case Line:
             {
-                return mesh.drawLine;
+                this.draw = mesh.drawLine;
                 break;
             }
             case LineSeg:
             {
-                return mesh.drawLineSeg;
+                this.draw = mesh.drawLineSeg;
                 break;
             }
             case Ray:
             {
-                return mesh.drawRay;
+                this.draw = mesh.drawRay;
                 break;
             }
             case Vector:
             {
-                return mesh.drawVector;
+                this.draw = mesh.drawVector;
                 break;
             }
             default:
@@ -319,6 +380,8 @@ function MathObject(name, data)
             }
         }
     }
+
+    this.assignDrawCall(data, this.mesh); 
 };
 var scene = [];
 var gizmos = [];
@@ -383,5 +446,4 @@ window.onload = function initialize()
     initWebGL();
     initTestScene();
     update(gl);
-    render(gl);
 }
