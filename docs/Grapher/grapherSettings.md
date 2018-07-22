@@ -1,12 +1,6 @@
 ## Vector Addition
 Adds two vectors together. Must be of same dimension. 
 
-## Legend
-* n: dimension
-* <span class="blue">this</span>: this vector; leftmost operand
-* v: another vector
-* Superscripted operator (e.g. \\(2^+\\)): how many of said operation 
-
 ## Functions
 Name | Functionality
 - | - 
@@ -40,3 +34,9 @@ console.log("a: ", a);
 <p>let \\(\overrightarrow{c} = \overrightarrow{a} + \overrightarrow{b}\\), </p>
 <img class="imgCentered" src="/imgs/vectorAdditionOperation.png">
 <p>then \\(\overrightarrow{c} = [a_x + b_x, a_y + b_y] = [3 + (-2), 4 + 1] = [1, 5]\\).
+
+## Legend
+* n: dimension
+* <span class="blue">this</span>: this vector
+* v: another vector
+* Superscripted operator (e.g. \\(2^+\\)): how many of said operation 

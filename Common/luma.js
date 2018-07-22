@@ -61,8 +61,35 @@ function sign(s)
 //#endregion
 
 // ########## Linear Algebra ##########
+function flatten (array) 
+{
+    var tempArray = [];
+    for (var i = 0; i < array.length; i++)
+    {
+        var obj = array[i];
+        switch (obj.constructor)
+        {
+            case Vec2:
+            {
+                tempArray.push(obj.x, obj.y);
+                break;
+            }
+            case Vec3:
+            {
+                tempArray.push(obj.x, obj.y, obj.z);
+                break;
+            }
+            case Vec4:
+            {   
+                tempArray.push(obj.x, obj.y, obj.z, obj.w);
+                break;
+            }
+        }
+    }
+    // array = tempArray;
+    return tempArray;
+};
 //#region Vec2
-// ##### Vec2 #####
 // Constructor
 function Vec2(x, y) { this.x = (x || 0); this.y = (y || 0); };
 // Vector arithmetic
@@ -213,12 +240,12 @@ Vec2.prototype.refractUnit = function(v, n1, n2)
 // Transformations
 Vec2.prototype.rotation = function(s)
 {
+    // Apply these changes to rotate() as well!
     var temp = this;
     var mag = temp.mag();
     var angle = new Vec2(1, 0).angleDirected(temp);
-    console.log("angle: ", angle);
-    var cos = Math.cos(angle);
-    var sin = Math.sin(angle);
+    var cos = Math.cos(angle + s);
+    var sin = Math.sin(angle + s);
     var px = cos * mag;
     var py = sin * mag;
     return new Vec2(px, py);
@@ -361,6 +388,9 @@ Vec3.prototype.rotate = function(s)
 //#endregion
 
 //#region Vec4
+// ##### Vec4 #####
+// Constructor
+function Vec4(x, y, z, w) { this.x = (x || 0); this.y = (y || 0); this.z = (z || 0); this.w = (w || 0); };
 //#endregion
 
 //#region Mat2
