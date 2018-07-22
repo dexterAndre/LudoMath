@@ -68,18 +68,19 @@ var Settings =
     g_radiusFillPoint : 0.1,
     g_radiusStrokePoint : 0.05,
     g_colorFillPoint : new Vec4(1.0, 1.0, 1.0, 1.0),
-    g_colorStrokePoint : new Vec4(0.471, 0.647, 1.0, 1.0),
+    // g_colorStrokePoint : new Vec4(0.471, 0.647, 1.0, 1.0),
+    g_colorStrokePoint : new Vec4(55/255, 55/255, 55/255, 1.0),
         // Line
-    g_radiusStrokeLine : 0.05,
+    g_radiusStrokeLine : 0.025,
     g_colorStrokeLine : new Vec4(0.471, 0.647, 1.0, 1.0),
         // LineSeg
-    g_radiusStrokeLineSeg : 0.05,
+    g_radiusStrokeLineSeg : 0.025,
     g_colorStrokeLineSeg : new Vec4(0.471, 0.647, 1.0, 1.0),
         // Ray
-    g_radiusStrokeRay : 0.05,
+    g_radiusStrokeRay : 0.025,
     g_colorStrokeRay : new Vec4(0.471, 0.647, 1.0, 1.0),
         // Vector
-    g_radiusStrokeVector : 0.05,
+    g_radiusStrokeVector : 0.025,
     g_heightArrowVector : 0.15,
     g_colorFillVector : new Vec4(1.0, 1.0, 1.0, 1.0),
     g_colorStrokeVector : new Vec4(0.471, 0.647, 1.0, 1.0),
@@ -275,9 +276,25 @@ function Mesh(object)
         tempVertices = flatten(tempVertices);
         return tempVertices;
     };
-    this.meshLineSeg = function(object)
+    this.meshLineSeg = function(object, rotation)
     {
-        
+        // Adding points a and b
+        this.vertices.push.apply(this.vertices, this.meshPoint(object.a, rotation));
+        this.vertices.push.apply(this.vertices, this.meshPoint(object.b, rotation));
+        // Adding line part for last to make it easier to navigate the buffer's indices
+        var pa = new Vec2(object.a.x, object.a.y);
+        var pb = new Vec2(object.b.x, object.b.y);
+        var vab = pb.sub(pa).normalization().mul(2);    // Making sure it exceeds the viewport to make the illusion of an infinite line
+        var vn = vab.rotation(90 * DEG2RAD).normalization().mul(Settings.g_radiusStrokeLine);
+        var p0 = pa.add(vn);
+        var p1 = pa.sub(vn);
+        var p2 = pb.add(vn);
+        var p3 = pb.sub(vn);
+        this.vertices.push(
+            new Vec3(p0.x, p0.y, 0.0), 
+            new Vec3(p1.x, p1.y, 0.0), 
+            new Vec3(p2.x, p2.y, 0.0), 
+            new Vec3(p3.x, p3.y, 0.0));
     };
     this.meshRay = function(object)
     {
@@ -303,7 +320,6 @@ function Mesh(object)
             {
                 this.meshPoint(obj);
                 bufferVertices = this.bufferPoint(0);
-                console.log(bufferVertices);
                 this.generateBuffers();
                 return;
             }
@@ -323,7 +339,15 @@ function Mesh(object)
             }
             case LineSeg:
             {
-                this.meshLineSeg(obj);
+                // Calculate angle between x-axis and AB-vector
+                var dx = obj.b.x - obj.a.x;
+                var dy = obj.b.y - obj.a.y;
+                var vAB = new Vec2(dx, dy).normalization();
+                var vX = new Vec2(1, 0);
+                var angle = vX.angleUnit(vAB);
+                this.meshLineSeg(obj, angle);
+                bufferVertices = this.bufferLine();
+
                 this.generateBuffers();
                 return;
             }
@@ -379,8 +403,8 @@ function Mesh(object)
         gl.enableVertexAttribArray(colorLoc);
 
         // Drawing point
-        gl.drawArrays(gl.TRIANGLE_FAN, 0, graphicsResolutionRoundness + 2);
-        gl.drawArrays(gl.TRIANGLE_STRIP, graphicsResolutionRoundness + 2, 2 * graphicsResolutionRoundness + 2);
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, Settings.g_resolutionRoundness + 2);
+        gl.drawArrays(gl.TRIANGLE_STRIP, Settings.g_resolutionRoundness + 2, 2 * Settings.g_resolutionRoundness + 2);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     };
     this.drawLine = function()
@@ -433,11 +457,13 @@ function Mesh(object)
     };
     this.drawLineSeg = function()
     {
-
+        // Maybe eliminate this an just use drawLine() instead of drawLineSeg()?
+        this.drawLine();
     };
     this.drawRay = function()
     {
-
+        // Maybe eliminate this an just use drawLine() instead of drawRay()?
+        this.drawLine();
     };
     this.drawVector = function()
     {
@@ -496,12 +522,12 @@ function MathObject(name, data)
             }
             case LineSeg:
             {
-                this.draw = mesh.drawLineSeg;
+                this.draw = mesh.drawLine;
                 break;
             }
             case Ray:
             {
-                this.draw = mesh.drawRay;
+                this.draw = mesh.drawLine;
                 break;
             }
             case Vector:
@@ -514,10 +540,23 @@ function MathObject(name, data)
                 break;
             }
         }
-    }
+    };
 
     this.assignDrawCall(data, this.mesh); 
 };
+
+function Gizmo(data, style)
+{
+    this.name = name;
+    this.data = data;
+    this.mesh = new Mesh(data);
+    this.draw;
+    this.assignDrawCall = function(obj, mesh)
+    {
+
+    };
+}
+
 var scene = [];
 var gizmos = [];
 
@@ -533,7 +572,8 @@ function initWebGL()
 function initTestScene()
 {
     // scene.push(new MathObject("pointA", new Point(0.0, 0.0, 0.0)));
-    scene.push(new MathObject("lineAB", new Line(new Point(-0.5, -0.5, 0.0), new Point(0.5, 0.5, 0.0))));
+    // scene.push(new MathObject("lineAB", new Line(new Point(-0.5, -0.5, 0.0), new Point(0.5, 0.5, 0.0))));
+    scene.push(new MathObject("lineSegAB", new LineSeg(new Point(-0.5, -0.5, 0.0), new Point(0.5, 0.5, 0.0))));
 };
 
 function updateGeometry()
@@ -560,7 +600,11 @@ function draw()
 
 function render(gl)
 {
-    gl.clearColor(0.5, 0.5, 0.5, 1.0);
+    gl.clearColor(
+        Settings.g_colorBackground.x, 
+        Settings.g_colorBackground.y,
+        Settings.g_colorBackground.z,
+        Settings.g_colorBackground.w);
     gl.enable(gl.DEPTH_TEST);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, canvas.width, canvas.height);
