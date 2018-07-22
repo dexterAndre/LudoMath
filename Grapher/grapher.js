@@ -424,8 +424,6 @@ function Mesh(object)
         const colorLoc = gl.getAttribLocation(shaderProgram, "color");
         gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 4 * 7, 4 * 3);
         gl.enableVertexAttribArray(colorLoc);
-
-        // Drawing line
         
         // Drawing points
         var offset = 0;
@@ -439,20 +437,6 @@ function Mesh(object)
         offset += 2 * graphicsResolutionRoundness + 2;
         gl.drawArrays(gl.TRIANGLE_STRIP, offset, 4);
         
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-
-
-        // gl.drawArrays(gl.TRIANGLE_FAN, offset, graphicsResolutionRoundness + 2);
-        // offset += graphicsResolutionRoundness + 2;
-        // gl.drawArrays(gl.TRIANGLE_STRIP, offset, 2 * graphicsResolutionRoundness + 2);
-        // offset += 2 * graphicsResolutionRoundness + 2;
-        // gl.drawArrays(gl.TRIANGLE_FAN, offset, graphicsResolutionRoundness + 2);
-        // offset += graphicsResolutionRoundness + 2;
-        // gl.drawArrays(gl.TRIANGLE_STRIP, offset, 2 * graphicsResolutionRoundness + 2);
-        // offset += 2 * graphicsResolutionRoundness + 2;
-        // gl.drawArrays(gl.TRIANGLE_STRIP, offset, 2 * graphicsResolutionRoundness + 2);
-
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     };
     this.drawLineSeg = function()
