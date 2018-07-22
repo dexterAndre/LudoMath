@@ -179,8 +179,8 @@ function Mesh(object)
     this.meshLine = function(object, rotation)
     {
         // Adding points a and b
-        this.vertices.push.apply(this.vertices, this.meshPoint(object.a, 0, rotation));
-        this.vertices.push.apply(this.vertices, this.meshPoint(object.b, 1, rotation));
+        this.vertices.push.apply(this.vertices, this.meshPoint(object.a, rotation));
+        this.vertices.push.apply(this.vertices, this.meshPoint(object.b, rotation));
         // Adding line part for last to make it easier to navigate the buffer's indices
         var pa = new Vec2(object.a.x, object.a.y);
         var pb = new Vec2(object.b.x, object.b.y);
