@@ -188,6 +188,10 @@ h2
 {
     color: gray;
 }
+.broken-link
+{
+    color: gray;
+}
 #link-NA:hover
 {
     color: #2B5FC7;
@@ -390,4 +394,38 @@ h2
 {
     text-align: left;
     margin:  auto 0;
+}
+
+tr td
+{
+    padding: 0 15px;
+    text-align: center;
+}
+
+.key-value td
+{
+    text-align: center;
+}
+
+.key-value td:nth-child(2n + 2)
+{
+    text-align: left;
+}
+
+.key-value2 td
+{
+    text-align: center;
+}
+.key-value2 td:nth-child(3n + 2)
+{
+    text-align: left;
+}
+.key-value2 td:nth-child(3n + 3)
+{
+    text-align: center;
+}
+
+.key-value3 td:nth-child(2n + 2)
+{
+    text-align: left;
 }

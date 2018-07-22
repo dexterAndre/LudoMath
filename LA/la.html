@@ -32,34 +32,29 @@
             <div class="content">
                 <h1>Linear Algebra</h1>
                 <p>
-                    Linear algebra is an algebra that extends to vectors and matrices, not just regular numbers. In elementary algebra (the one with regular numbers), we could solve equations like \(2 + x = 5\), which would give us \(x = 3\). In linear algebra, however, we work with higher order objects, and we could solve equations like this: 
+                    Linear algebra is a system that extends to vectors and matrices, not just regular numbers. In elementary algebra (the one with regular numbers), we could solve equations like \(2 + x = 5\), which would give us \(x = 3\). In linear algebra, however, we work with higher order objects, and we could solve equations like this: 
                 </p>
                 <p>
                     $$\begin{bmatrix} 1 & 0 & 1 \\ 0 & -1 & 2 \\ 1 & -1 & 3 \end{bmatrix} \begin{bmatrix} a \\ b \\ c \end{bmatrix} = \begin{bmatrix} 1 \\ -2 \\ 7 \end{bmatrix}$$
                 </p>
                 <p>
-                    In game development, however, we tend to mainly use linear algebra for transformations. Meshes go through several spaces in 3D until it reaches a pixel on the computer screen. These transformations happen every frame for each vertex, so we need to prioritize efficiency. It turns out that matrices are a great and cheap method of performing these transformations in a predictable way. In fact, our graphics proecssors are physically built to handle matrix transformations much better than our CPU. 
+                    In game development, however, we tend to mainly use linear algebra for transformations. Meshes go through several coordinate spaces in 3D until it reaches a pixel on the computer screen. These transformations happen every frame for each vertex, so we need to prioritize efficiency. It turns out that matrices are a great and cheap method of performing these transformations in a predictable way. In fact, our graphics proecssors are especially built to handle matrix transformations much better than our CPU. 
+                </p>
+                <p>
+                    Here is an example of a translation matrix for a 3D object: 
+                </p>
+                <p>
+                    $$\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 1 & 0 & -2 \\ 0 & 0 & 1 & 4 \\ 0 & 0 & 0 & 1\end{bmatrix}$$
+                </p>
+                <p>
+                    Which numbers affect what? And why is it a four-dimensional matrix if we are working in 3D? We will explain all of this in the chapter on <em>transformations</em>. Most transformations will already be implemented for us, but understanding the workings behind them will let us further customize our graphics. 
                 </p>
                 <p>
                     Shaders and graphics programming are our window into the rendering pipeline, and we have to create matrices that transform objects from local space to world space, to camera space, to homogenous clip space, to normalized device space, to viewport space. It's a lot to take in! Don't worry if you don't recognize or remember all these spaces. The key takeaway is that matrices are the things that convert sends objects <em>between</em> these spaces. A matrix does not represent the space itself; it's only the bridge between them. 
                 </p>
-
-
-                <ul class="list-topics">
-                    <!-- <li><a href="vectors.html">Vectors</a></li> -->
-                    <li><a href="vec.html">Vectors</a></li>
-                    <!-- <li><a href="coordinate-systems.html">Coordinate Systems</a></li> -->
-                    <li><a href="" class="broken-link">Coordinate Systems</a></li>
-                    <!-- <li><a href="matrices.html">Matrices</a></li> -->
-                    <li><a href="" class="broken-link">Matrices</a></li>
-                    <!-- <li><a href="transformations.html">Transformations</a></li> -->
-                    <li><a href="" class="broken-link">Transformations</a></li>
-                    <!-- <li><a href="quaternions.html">Quaternions</a></li> -->
-                    <li><a href="" class="broken-link">Quaternions</a></li>
-                </ul>
                 <h2>Scalars, Vectors, and Matrices</h2>
                 <p>
-                    In linear algebra we are working with different types of mathematical objects. We are most used to working with regular numbers, but there are plenty of other objects we can work with. In this chapter we will create a new algebra based on vectors and matrices. These objects can operate on each other, so we have to make a distinction between them: 
+                    We will work with different types of mathematical objects in linear algebra. We are most used to working with regular numbers, but there are plenty of other objects we can work with. In this chapter we will create a new algebra based on vectors and matrices. Instead of saying "regular numbers", we use a more suitable name: <em>scalars</em>. Scalars are numeric values like \(1\), \(0\), \(-2\), \( - \frac{1}{12}\), \(\pi\), \(e\), and even \(\sqrt{-1}\). All the objects in linear algebra can operate on each other, and they can represent many different things: 
                 </p>
                 <table>
                     <tr>
@@ -85,43 +80,154 @@
                 </table>
                 <h2>Mathematical Operations</h2>
                 <p>
-                    This section will be a review of some properties of operations on scalars. You don't have to already be comfortable with this, as we will quickly discard many of these properties in linear algebra. We outline the properties here for comparison with their equivalent properties within linear algebra. 
+                    This section will be a review of some properties of operations on scalars, also found in <a href="" class="broken-link">Numbers & Algebra</a>. You don't have to already be comfortable with this, as we will quickly discard many of these properties in linear algebra. We outline the properties here for comparison with their equivalent properties within linear algebra. 
                 </p>
                 <p>
                     From working with scalars, we know some laws that apply: 
                 </p>
-                <ul>
-                    <li>\(a + 0 = a\): Any scalar plus 0 is itself. </li>
-                    <li>\(a \cdot 0 = 0\): Any scalar multiplied by 0 is 0. </li>
-                    <li>\(a \cdot 1 = a\): Any scalar multiplied by 1 is itself. </li>
-                    <li>\(\frac{a}{a} = 1\): Any scalar divided by itself is 1. </li>
-                    <li>\(a + b = b + a\): You can change the order of addition. </li>
-                    <li>\(a - b \ne b - a\): You can <em>not</em> change the order of subtraction. </li>
-                    <li>\(a \cdot b = b \cdot a\): You can change the order of multiplication. </li>
-                    <li>\(\frac{a}{b} \ne \frac{b}{a}\): You can <em>not</em> change the order of division. </li>
-                    <li>\((a + b) + c = a + (b + c)\): You can group numbers in addition in any way you'd like. </li>
-                    <li>\((a \cdot b) \cdot c = a \cdot (b \cdot c)\): You can group numbers in multiplication in any way you'd like. </li>
-                    <li>\(a (b + c) = ab + ac\): You can distribute the outside factor to each of the inside terms. </li>
-                </ul>
+                <table class="key-value">
+                    <tr>
+                        <th>Law</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>\(a + 0 = a\)</td>
+                        <td>Any scalar plus 0 is itself. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a \cdot 0 = 0\)</td>
+                        <td>Any scalar multiplied by 0 is 0. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a \cdot 1 = a\)</td>
+                        <td>Any scalar multiplied by 1 is itself. </td>
+                    </tr>
+                    <tr>
+                        <td>\(\frac{a}{a} = 1\)</td>
+                        <td>Any scalar divided by itself is 1. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a + b = b + a\)</td>
+                        <td>You can change the order of addition. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a - b \ne b - a\)</td>
+                        <td>You can <em>not</em> change the order of subtraction. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a \cdot b = b \cdot a\)</td>
+                        <td>You can change the order of multiplication. </td>
+                    </tr>
+                    <tr>
+                        <td>\(\frac{a}{b} \ne \frac{b}{a}\)</td>
+                        <td>You can <em>not</em> change the order of division. </td>
+                    </tr>
+                    <tr>
+                        <td>\((a + b) + c = a + (b + c)\)</td>
+                        <td>You can group numbers in addition in any way you'd like. </td>
+                    </tr>
+                    <tr>
+                        <td>\((a \cdot b) \cdot c = a \cdot (b \cdot c)\)</td>
+                        <td>You can group numbers in multiplication in any way you'd like. </td>
+                    </tr>
+                    <tr>
+                        <td>\(a (b + c) = ab + ac\)</td>
+                        <td>You can distribute the outside factor to each of the inside terms. </td>
+                    </tr>
+                </table>
                 <p>
-                    Most people are used to these laws, so they don't pay them any attention. Many of them are so intuitive that there is really no reason to even think about them. This is not true in linear algebra, and here's one reason why: \(a \cdot b \ne b \cdot a\). That is the opposite of the \(7^{th}\) rule above, but remember that this list works only for scalars. With operations in linear algebra, we cannot assume that any of these are working any more. There is a progression to how these laws start to fall apart as we go through vectors, matrices, quaternions, and higher order objects. We'll start to see that only a few laws fall apart in vectors, some more in matrices, and then some more as we go higher. 
+                    Most people are used to these laws, so they don't pay them any attention. Many of them are so intuitive that there is really no reason to even think about them. In linear algebra, we have to be aware of these laws' behaviors, and here's one reason why: \(a \cdot b \ne b \cdot a\). This contradicts the \(7^{th}\) rule above, but remember that this list works only for scalars. With operations in linear algebra, we cannot assume that any of these are working by default. 
                 </p>
                 <p>
-                    We give names to these laws: 
+                    We give names to some of these laws: 
                 </p>
-                <ul>
-                    <li>Commutativity:</li>
-                    <ul>
-                        <li>Additive Commutativity: You can change the order of two or more terms. </li>
-                        <li>Multiplicative Commutativity: You can change the order of two or more factors. </li>
-                    </ul>
-                    <li>Associativity:</li>
-                    <ul>
-                        <li>Additive Associativity: You can group terms in any way you'd like. </li>
-                        <li>Multiplicative Associativity: You can group factors in any way you'd like. </li>
-                    </ul>
-                    <li>Distributivity: You can distribute the outside factors to each of the inside terms. </li>
+                <h3>Properties of Operations</h3>
+                <table class="key-value2">
+                    <tr>
+                        <th>Commutativity</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td>Additive</td>
+                        <td>Change the order of two or more terms. </td>
+                        <td>\(2 + 3 = 3 + 2\)</td>
+                    </tr>
+                    <tr>
+                        <td>Multiplicative</td>
+                        <td>Change the order of two or more factors. </td>
+                        <td>\(2 \cdot 3 = 3 \cdot 2\)</td>
+                    </tr>
+                    <tr>
+                        <th>Associativity</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td>Additive</td>
+                        <td>Group terms in any way you'd like. </td>
+                        <td>\((2 + 3) + 4 = 2 + (3 + 4)\)</td>
+                    </tr>
+                    <tr>
+                        <td>Multiplicative</td>
+                        <td>Group factors in any way you'd like. </td>
+                        <td>\((2 \cdot 3) \cdot 4 = 2 \cdot (3 \cdot 4)\)</td>
+                    </tr>
+                    <tr>
+                        <th>Distributivity</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Distribute the outside factors to each of the inside terms. </td>
+                        <td>\(2 (x + 1) = 2x+2\)</td>
+                    </tr>
+                </table>
+                <p>
+                    You don't have to memorize the laws and tables above, but try to keep them in the back of your mind as we go through the creation of this exciting new algebraic system. We'll start with vectors, then move onto matrices, and finally onto quaternions. We have plenty of theory, interactive simulations, and problems for you to work through, as well as code snippets for implementation. Let's start! 
+                </p>
+                <h2>Chapter Outline</h2>
+                <table class="key-value">
+                    <tr>
+                        <th>Topic</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Vectors</td>
+                        <td>Directions</td>
+                    </tr>
+                    <tr>
+                        <td>Coordinate Systems</td>
+                        <td>Spaces</td>
+                    </tr>
+                    <tr>
+                        <td>Matrices</td>
+                        <td>Blocks of information</td>
+                    </tr>
+                    <tr>
+                        <td>Transformations</td>
+                        <td>Operations on points and vectors</td>
+                    </tr>
+                    <tr>
+                        <td>Quaternions</td>
+                        <td>Advanced rotations</td>
+                    </tr>
+                </table>
+
+                <ul class="list-topics">
+                    <!-- <li><a href="vectors.html">Vectors</a></li> -->
+                    <li><a href="vec.html">Vectors</a></li>
+                    <!-- <li><a href="coordinate-systems.html">Coordinate Systems</a></li> -->
+                    <li><a href="" class="broken-link">Coordinate Systems</a></li>
+                    <!-- <li><a href="matrices.html">Matrices</a></li> -->
+                    <li><a href="" class="broken-link">Matrices</a></li>
+                    <!-- <li><a href="transformations.html">Transformations</a></li> -->
+                    <li><a href="" class="broken-link">Transformations</a></li>
+                    <!-- <li><a href="quaternions.html">Quaternions</a></li> -->
+                    <li><a href="" class="broken-link">Quaternions</a></li>
                 </ul>
+                <p>[Prev: Topics --- Next: Vectors]</p>
             </div>
         </div>
     </body>
