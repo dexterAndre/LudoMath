@@ -425,7 +425,17 @@ tr td
     text-align: center;
 }
 
+.key-value3 td:nth-child(2n + 1)
+{
+    text-align: left;
+}
 .key-value3 td:nth-child(2n + 2)
 {
     text-align: left;
+}
+
+.inline-image
+{
+    display: block;
+    margin: 0 auto;
 }

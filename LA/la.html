@@ -32,19 +32,22 @@
             <div class="content">
                 <h1>Linear Algebra</h1>
                 <p>
-                    Linear algebra is a system that extends to vectors and matrices, not just regular numbers. In elementary algebra (the one with regular numbers), we could solve equations like \(2 + x = 5\), which would give us \(x = 3\). In linear algebra, however, we work with higher order objects, and we could solve equations like this: 
+                    Linear algebra is a system that extends to vectors and matrices, not just regular numbers. In elementary algebra (the one with regular numbers), we could solve equations like \(2 + x = 5\), which would give us \(x = 3\). In linear algebra, however, we work with higher order objects, and we could solve systems of equations like this: 
                 </p>
                 <p>
                     $$\begin{bmatrix} 1 & 0 & 1 \\ 0 & -1 & 2 \\ 1 & -1 & 3 \end{bmatrix} \begin{bmatrix} a \\ b \\ c \end{bmatrix} = \begin{bmatrix} 1 \\ -2 \\ 7 \end{bmatrix}$$
                 </p>
                 <p>
-                    In game development, however, we tend to mainly use linear algebra for transformations. Meshes go through several coordinate spaces in 3D until it reaches a pixel on the computer screen. These transformations happen every frame for each vertex, so we need to prioritize efficiency. It turns out that matrices are a great and cheap method of performing these transformations in a predictable way. In fact, our graphics proecssors are especially built to handle matrix transformations much better than our CPU. 
+                    In game development, we tend to mainly use linear algebra for transformations, and less often to solve systems of equations (although this is used as well). Meshes go through several coordinate spaces in 3D until it reaches a pixel on the computer screen. These transformations happen every frame for each vertex, so we need to prioritize efficiency. It turns out that matrices are a great and cheap method of performing these transformations in a predictable way. In fact, our graphics proecssors are especially built to handle matrix transformations much better than our CPU. 
                 </p>
                 <p>
                     Here is an example of a translation matrix for a 3D object: 
                 </p>
                 <p>
                     $$\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 1 & 0 & -2 \\ 0 & 0 & 1 & 4 \\ 0 & 0 & 0 & 1\end{bmatrix}$$
+                </p>
+                <p>
+                    
                 </p>
                 <p>
                     Which numbers affect what? And why is it a four-dimensional matrix if we are working in 3D? We will explain all of this in the chapter on <em>transformations</em>. Most transformations will already be implemented for us, but understanding the workings behind them will let us further customize our graphics. 
@@ -188,7 +191,7 @@
                     You don't have to memorize the laws and tables above, but try to keep them in the back of your mind as we go through the creation of this exciting new algebraic system. We'll start with vectors, then move onto matrices, and finally onto quaternions. We have plenty of theory, interactive simulations, and problems for you to work through, as well as code snippets for implementation. Let's start! 
                 </p>
                 <h2>Chapter Outline</h2>
-                <table class="key-value">
+                <table class="key-value3">
                     <tr>
                         <th>Topic</th>
                         <th>Description</th>

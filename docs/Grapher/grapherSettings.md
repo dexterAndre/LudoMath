@@ -1,5 +1,5 @@
-## Vector Addition
-Adds two vectors together. Must be of same dimension. 
+## Luma Grapher Settings
+
 
 ## Functions
 Name | Functionality

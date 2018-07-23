@@ -40,28 +40,16 @@
                 <p class="box-info">
                     Vectors are geometric objects that has both direction and magnitude. 
                 </p>
-                <h2>Notation</h2>
-                <p>
-                    When we write vectors on paper, we usually want to specify its name and its contents. Different texts use different naming conventions and markup style. Some textbooks - especially older ones - use the bolded notation to write the name of the vector, with standard parentheses to contain its information: \({\bf a} = (3, 4)\).
-                </p>
-                <p>
-                    We will avoid this type of notation in LudoMath, in favor of the overhead arrow and square brackets: \(\overrightarrow{a} = [3, 4]\). 
-                </p>
-                <p>
-                    The notation mentioned above writes vectors in one line as a row-vector. You could also write them vertically as column-vectors: 
-                </p>
-                <p>
-                    $$\overrightarrow{a} = \begin{bmatrix}3 \\ 4 \end{bmatrix}$$
-                </p>
-                <p>
-                    There is no informational difference between the two notations, but there are other reasons for choosing to use column-vector instead of row-vector notation. We will see  thatin the section on matrices later on. For now, we'll keep using row-vector notation. 
-                </p>
                 <h2>Geometric Meaning</h2>
                 <p>
-                    Vectors are first and foremost geometric objects. They represent a direction and magnitude in some dimension. We can choose any dimension we want, but in game development, we usually end up using 2D, 3D, and 4D vectors. Why do we use four-dimensional vectors? We will get back to that in the chapter on <i>transformations</i>. We will be working exclusively with 2D and 3D vectors in this section. Bear in mind that most vector concepts carry over into higher dimensions, although there are some operations that are only to be found in certain dimensions. This will be clearly communicated whenever that is the case. 
+                    Vectors are first and foremost geometric objects. They represent a direction and magnitude in some dimension. We can choose any dimension we want, but in game development, we usually end up using 2D, 3D, and 4D vectors. Why would we use four-dimensional vectors in 3D games? We will get back to that in the chapter on <i>transformations</i>. We will be working exclusively with 2D and 3D vectors in this section. Bear in mind that most vector concepts carry over into higher dimensions, although there are some operations that are only to be found in certain dimensions. This will be clearly communicated whenever that is the case. 
                 </p>
                 <p>
-                    Based on the definition above, vectors only contain information about direction and magnitude, but where is the information about its position? If we want to plot a vector in a coordinate system, we have to know its position, right? By definition, vectors do not hold any information about position, so mathematicians have accepted that we can place vectors anywhere in the coordinate system we want to, without affecting its geometric meaning. This is an important concept to learn. 
+                    Here are some examples of vectors in 2D: 
+                </p>
+                <img src="../imgs/img-vector-examples.png" class="inline-image">
+                <p>
+                    Based on the definition above, vectors only contain information about direction and magnitude, and we cannot force them to contain more information than that, even if we wanted to. So where is the information about its position? If we want to plot a vector in a coordinate system, we have to know its position, right? By definition, vectors do not hold any information about position, so mathematicians have accepted that we can place vectors anywhere in the coordinate system we want to, without affecting its geometric meaning. This is an important concept to learn. 
                 </p>
                 <p class="box-info">
                     Vectors are not bound to any position. Placing a vector in a different position will not change its geometric meaning. 
@@ -78,7 +66,23 @@
                     <li>Point + vector = point</li>
                 </ul>
                 <p>
-                    One argument for having no programmatic separation between vectors and points, is that we no longer have to convert between the two. Their geometric meaning still haven't changed, and it is up to the programmer to make those disctinctions. 
+                    One argument for having no programmatic separation between vectors and points, is that we no longer have to convert between the two. By keeping one vector class to express both points and vectors Their geometric meaning still haven't changed, and it is up to the programmer to make those disctinctions. 
+                </p>
+                <h2>Notation</h2>
+                <p>
+                    When we write vectors on paper, we usually want to specify its name and its contents. Different texts use different naming conventions and markup style. Some textbooks - especially older ones - use the bolded notation to write the name of the vector, with standard parentheses to contain its information: \({\bf a} = (3, 4)\).
+                </p>
+                <p>
+                    We will avoid this type of notation in LudoMath, in favor of the overhead arrow and square brackets: \(\overrightarrow{a} = [3, 4]\). 
+                </p>
+                <p>
+                    The notation mentioned above writes vectors in one line as a row-vector. You could also write them vertically as column-vectors: 
+                </p>
+                <p>
+                    $$\overrightarrow{a} = \begin{bmatrix}3 \\ 4 \end{bmatrix}$$
+                </p>
+                <p>
+                    There is no informational difference between the two notations, but there are other reasons for choosing to use column-vector instead of row-vector notation. We will see  thatin the section on matrices later on. For now, we'll keep using row-vector notation. 
                 </p>
                 <h2>Forms</h2>
                 <p>
