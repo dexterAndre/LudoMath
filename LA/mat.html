@@ -34,17 +34,7 @@
             <div class="content">
                 <h1>Introduction to Matrices</h1>
                 <p>
-                    Matrices are rectangular arrays containing information. They look much like vectors, but have expanded into two dimensions.
-                </p>
-                <p>
-                    There are two main reasons why we want to learn matrices for game development: 
-                </p>
-                <ul>
-                    <li>TransformationsApplying transformations</li>
-                    <li>Solving systems of equations</li>
-                </ul>
-                <p>
-                    
+                    Matrices are rectangular arrays containing information. They look much like vectors, but have expanded into two dimensions. 
                 </p>
                 <p>
                     Here's an example of a 4x4 matrix: 
@@ -57,9 +47,51 @@
                     0 & 0 & 0 & 1
                     \end{bmatrix}$$
                 </p>
+                <p>
+                    There are two main reasons why we want to learn matrices for game development: 
+                </p>
+                <ul>
+                    <li>Applying transformations</li>
+                    <li>Solving systems of equations</li>
+                </ul>
+                <p>
+                    This chapter will focus on working with matrices, regardless of their meaning. We will perform operations, solve systems of equations, and implement the code for our own matrix class later on. We introduce theory on transformations in the next chapter, but before that, we have to know the inner workings of matrices. 
+                </p>
+                <h2>Terminology</h2>
+                <p>
+                    We'll start off by introducing some terminology that we use to describe matrices and their properties. 
+                </p>
+                <h3>Rows and Columns</h3>
+                <p>
+                    A matrix consists of rows (horizontal lines) and columns (vertical lines). Take for example the matrix below - it has three rows and five columns: 
+                </p>
+                <p>
+                    $$\begin{bmatrix}
+                    1 & -2 & 4 & 3 & -7\\ 
+                    0 & -3 & 2 & 6 & 19 \\ 
+                    \frac{1}{2} & \frac{7}{6} & 1 & 0 & 3
+                    \end{bmatrix}$$
+                </p>
+                <h3>Dimension</h3>
+                <p>
+                    A matrix's dimension is a way to determine how many rows and columns it has. The matrix above has three rows and five columns, and is a 3x5 matrix. We read this notation as "three by five matrix". Certain operations cannot be performed unless the dimensionality of the involved matrices meets certain requirements. 
+                </p>
+                <h3>Coordinates</h3>
+                <p>
+                    Because matrices often contain many numbers, we need a way to "navigate" through them. We do this by assigning coordinates to the matrix. When reading matrix coordinates, we start first by naming with row the number is located at. Then we name the column it is located at. The enumeration of rows happen top-down, meaning that the uppermost row is the first row, and the lowermost row is the last row. The enumeration of columns happen from left to right, meaning that the leftmost column is the first one, and the rightmost column is the last one. 
+                </p>
+                <p>
+                    If you're reading this, you are probably more of a programmer than a pure mathematician. In pure mathematics, the one-based numbering is often prevalent. The first element in a mathematical object would then be the \(1^{st}\) element. But in computer science, we tend to use zero-based numbering, and we know that the first element of an array is the \(0^{th}\) element. We will continue to use this zero-based numbering here. 
+                </p>
+                <p>
+                    To denote matrix coordinates, we usually provide the name of the matrix, subscripted with its matrix coordinates. 
+                </p>
+                <p>
+                    In game development, we can safely assume that we will not be working with matrices of any higher dimension than 10, so we can continue to concatenate the matrix coordinates into one number. So for example, the matrix coordinate \(M_{23}\) should be understood as the element at row 2 and column 3, not the 
+                </p>
 
                 <p>
-
+                    [INSERT ILLUSTRATION]
                 </p>
             </div>
         </div>
