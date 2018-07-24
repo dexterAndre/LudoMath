@@ -89,7 +89,9 @@ function flatten (array)
     // array = tempArray;
     return tempArray;
 };
+
 //#region Vec2
+// ##### Vec2 #####
 // Constructor
 function Vec2(x, y) { this.x = (x || 0); this.y = (y || 0); };
 // Vector arithmetic
@@ -488,6 +490,57 @@ function Circle()
         // Vectors pointing towards circumcenter
         
     }
+};
+//#endregion
+//#region Point
+function RandomSetPoint(count, min, max)
+{
+    var tempArr = [];
+
+    // Vec2
+    switch (min.constructor)
+    {
+        case Vec2:
+        {
+            var domain = new Vec2(max.x - min.x, max.y - min.y);
+            for (var i = 0; i < count; i++)
+            {
+                var A = Math.random();
+                var B = Math.random();
+                tempArr.push(new Vec2(min.x, min.y).add(new Vec2(domain.x * A, domain.y * B)));
+            }
+            break;
+        }
+        case Vec3:
+        {
+            break;
+        }
+        case Vec4:
+        {
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    return tempArr;
+};
+function Voronoi(P)
+{
+
+};
+function DelaunayTriangulation(P)
+{
+    
+};
+function MidPoint(P)
+{
+
+};
+function KMeansClustering(P)
+{
+
 };
 //#endregion
 
