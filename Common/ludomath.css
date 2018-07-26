@@ -439,3 +439,29 @@ tr td
     display: block;
     margin: 0 auto;
 }
+
+.matrix-table
+{
+    background-color: #EEE;
+    border: none;
+}
+.matrix-table tr:nth-child(even)
+{
+    background-color: #DDD;
+}
+.matrix-table tr:first-child th:nth-child(even)
+{
+    background-color: #DDD;
+}
+.matrix-table tr:nth-child(even) td:nth-child(even)
+{
+    background-color: #CCC;
+}
+.matrix-table tr:nth-child(2n + 3) td:nth-child(2n + 3)
+{
+    background-color: #EEE;
+}
+.matrix-table tr:nth-child(2n + 3) td:nth-child(2n + 2)
+{
+    background-color: #DDD;
+}

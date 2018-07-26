@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LudoMath - Intersection Testing</title>
+        <link rel="canonical" href="ludomath.net"/>
+        <script type="text/javascript">
+            var host = "ludomath.net";
+            if ((host == window.location.host) && (window.location.protocol != "https:"))
+            {
+                window.location.protocol = "https";
+            }
+        </script>
+        <link rel="stylesheet" type="text/css" media="screen" href="../Common/ludomath.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <button id="btn-brand">LudoMath</button>
+                <button id="btn-dropdown">Topics <i class="fas fa-caret-down"></i></button>
+                <input id="inp-search" type="text" placeholder="Search"/>
+                <button id="btn-profile">Profile <i class="fas fa-user"></i></button>
+            </div>
+        </div>
+        <div class="base">
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a>
+                <i class="fas fa-angle-double-right"></i>
+                <a href="GEO.html">Geometry</a>
+                <i class="fas fa-angle-double-right"></i>
+                <a href="GEO.html">Intersection Testing</a>
+            </div>
+            <div class="content">
+                <h1>Intersection Testing</h1>
+                <p>
+                    Justification section. 
+                </p>
+                <h2>Intersection Shapes in 2D</h2>
+                <p><em>Note: "Line" includes line segments as well as rays. Polynomial (n) stands for a polynomial of degree n. </em></p> 
+                <p>We will use this short naming convention to fit all the data into a small table: <em>Pnt</em>: point, <em>Ln</em>: line, <em>Crc</em>: circle, <em>Pln</em>: polynomial. </p>
+                <p>
+                    Coefficients in front of an object counts how many there can be for one case of the intersection test. Programmatically, we are always dealing with floating-point errors, and certain mathematical possibilities will only rarely happen in programming. We mark these rare cases with an asterisk (*). 
+                </p>
+                <p>
+                    There is always the possibility of no intersection happening between two mathematical objects. In this case, we will omit writing <em>null</em>, but always keep in mind that this might be the case for your intersection tests as well. 
+                </p>
+                <p>
+                    Some objects, like functions and curves, are too vague to discern certain intersection properties with other objects. We leave these empty, knowing that we have to specify further. 
+                </p>
+                <table class="matrix-table">
+                    <tr>
+                        <th></th>
+                        <th>Point</th>
+                        <th>Line</th>
+                        <th>Circle</th>
+                        <th>Polynomial (n)</th>
+                    </tr>
+                    <tr>
+                        <th>Point</th>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>nPnt, (n-1)Pnt, ..., 1Pnt</td>
+                    </tr>
+                    <tr>
+                        <th>Line</th>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>2Pnt, 1Pnt*</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Circle</th>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>Crc*, 2Pnt, 1Pnt*</td>
+                        <td>1Pnt</td>
+                    </tr>
+                    <tr>
+                        <th>Polynomial (n)</th>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>1Pnt</td>
+                        <td>nPnt, (n-1)Pnt, ..., 1Pnt</td>
+                    </tr>
+                </table>
+                <p>[Note to self: Make an intersection testing tool, to visualize how the outline of the intersection would look like. For example, an intersection between a plant and a sphere would always be circular, but the user can play around and rotate the plane to try and make it elliptic, only to see that it will forever be circular. Now try with cones! </p>
+            </div>
+        </div>
+    </body>
+</html>

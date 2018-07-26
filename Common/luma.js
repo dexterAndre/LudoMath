@@ -63,7 +63,7 @@ function sign(s)
 // ########## Linear Algebra ##########
 function flatten (array) 
 {
-    var tempArray = [];
+    var tempArr = [];
     for (var i = 0; i < array.length; i++)
     {
         var obj = array[i];
@@ -71,28 +71,31 @@ function flatten (array)
         {
             case Vec2:
             {
-                tempArray.push(obj.x, obj.y);
+                tempArr.push(obj.x, obj.y);
                 break;
             }
             case Vec3:
             {
-                tempArray.push(obj.x, obj.y, obj.z);
+                tempArr.push(obj.x, obj.y, obj.z);
                 break;
             }
             case Vec4:
             {   
-                tempArray.push(obj.x, obj.y, obj.z, obj.w);
+                tempArr.push(obj.x, obj.y, obj.z, obj.w);
+                break;
+            }
+            default:
+            {
                 break;
             }
         }
     }
     // array = tempArray;
-    return tempArray;
+    array.length = 0;
+    Array.prototype.push.apply(array, tempArr);
 };
 
 //#region Vec2
-// ##### Vec2 #####
-// Constructor
 function Vec2(x, y) { this.x = (x || 0); this.y = (y || 0); };
 // Vector arithmetic
 Vec2.prototype.add = function(v) { return new Vec2(this.x + (v.x || 0), this.y + (v.y || 0)); };
@@ -118,7 +121,8 @@ Vec2.prototype.angleDirected = function(v)
     var dot = this.x * v.x + this.y * v.y;
     var det = this.x * v.y - this.y * v.x;
     var angle = Math.atan2(det, dot);
-    if (angle < 0) angle += TAU; 
+    // if (angle < 0) angle += TAU; 
+    // Comment this out for Vec3 and Vec4 as well!
     return angle;
 };
 // Is there no angleDirectedUnit version? 
@@ -265,8 +269,6 @@ Vec2.prototype.rotate = function(s)
 //#endregion
 
 //#region Vec3
-// ##### Vec3 #####
-// Constructor
 function Vec3(x, y, z) { this.x = (x || 0); this.y = (y || 0); this.z = (z || 0); };
 // Vector arithmetic
 Vec3.prototype.add = function(v) { return new Vec3(this.x + (v.x || 0), this.y + (v.y || 0), this.z + (v.z || 0)); };
@@ -390,8 +392,6 @@ Vec3.prototype.rotate = function(s)
 //#endregion
 
 //#region Vec4
-// ##### Vec4 #####
-// Constructor
 function Vec4(x, y, z, w) { this.x = (x || 0); this.y = (y || 0); this.z = (z || 0); this.w = (w || 0); };
 //#endregion
 
@@ -469,6 +469,17 @@ Tri.prototype.circumCircle = function()
 {
 
 };
+Tri.prototype.counterClockwise = function()
+{
+    // https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
+    var det = this.a.x * this.b.y - this.b.x * this.a.y;
+    if (det > 0)
+        return true;
+    else if (det < 0)
+        return false;
+    else 
+        return null;
+};
 //#endregion
 //#region Circle
 function Circle()
@@ -493,7 +504,11 @@ function Circle()
 };
 //#endregion
 //#region Point
-function RandomSetPoint(count, min, max)
+var SortMode = Object.freeze({
+    Low: 0, High: 1, Left: 2, Right: 3, 
+    PolarCCW: 4, PolarCW: 5,
+});
+function randomSetPoint(count, min, max)
 {
     var tempArr = [];
 
@@ -526,21 +541,200 @@ function RandomSetPoint(count, min, max)
     }
     return tempArr;
 };
-function Voronoi(P)
+function sort(P, sortmode)
 {
-
+    var tempArr = [];
+    Array.prototype.push.apply(tempArr, P);
+    var tempPnt;
+    
+    switch (sortmode)
+    {
+        case SortMode.Low:
+        {
+            var i = 0;
+            while (i < tempArr.length - 1)
+            {
+                var y1 = tempArr[i].y;
+                var y2 = tempArr[i + 1].y;
+                
+                if (y2 < y1)
+                {
+                    tempPnt = tempArr[i];
+                    tempArr[i] = tempArr[i + 1];
+                    tempArr[i + 1] = tempPnt;
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            
+            break;
+        }
+        case SortMode.High:
+        {
+            break;
+        }
+        case SortMode.Left:
+        {
+            break;
+        }
+        case SortMode.Right:
+        {
+            break;
+        }
+        case SortMode.PolarCCW:
+        {
+            // The first element is the one with the lowest y-coordinate
+            var lowestIndex = 0;
+            for (var i = 0; i < tempArr.length; i++)
+            {
+                if (tempArr[i].y < tempArr[lowestIndex].y)
+                {
+                    lowestIndex = i;
+                }
+            }
+            tempPnt = tempArr[0];
+            tempArr[0] = tempArr[lowestIndex];
+            tempArr[lowestIndex] = tempPnt;
+            
+            // Measuring the polar counter-clockwise angle between the first point
+            var i = 1;
+            while (i < P.length - 1)
+            {
+                var a = tempArr[i].sub(tempArr[0]);
+                var b = tempArr[i + 1].sub(tempArr[0]);
+                // Doing a simplified cross product and measuring the z-component
+                if (a.x * b.y - b.x * a.y < 0)
+                {
+                    tempPnt = tempArr[i];
+                    tempArr[i] = tempArr[i + 1];
+                    tempArr[i + 1] = tempPnt;
+                    i = 1;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            
+            break;
+        }
+        case SortMode.PolarCW:
+        {
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    
+    P.length = 0;
+    Array.prototype.push.apply(P, tempArr);
 };
-function DelaunayTriangulation(P)
+function voronoi(P)
 {
     
 };
-function MidPoint(P)
+function delaunayTriangulation(P)
+{
+    
+};
+function midPoint(P)
 {
 
 };
-function KMeansClustering(P)
+function kMeansClustering(P)
 {
 
+};
+function connectOrdered(P)
+{
+    var tempArr = [];
+    for (var i = 0; i < P.length - 1; i++)
+    {
+        tempArr.push(P[i], P[i + 1]);
+    }
+    tempArr.push(P[P.length - 1], P[0]);
+    Array.prototype.push.apply(P, tempArr);
+};
+function connectAll(P)
+{
+    var tempArr = [];
+    for (var i = 0; i < P.length; i++)
+    {
+        for (var j = i + 1; j < P.length; j++)
+        {
+            tempArr.push(P[i], P[j]);
+        }
+    }
+    Array.prototype.push.apply(P, tempArr);
+};
+function convexHull(P, presorted)
+{
+    // https://en.wikipedia.org/wiki/Graham_scan#Pseudocode
+    if (!presorted)
+        sort(P, SortMode.PolarCCW);
+    
+    var tempArr = [];
+    tempArr.push(P[0], P[1], P[2]);
+    var i = 3;
+    while (i <= P.length)
+    {
+        var a = i == P.length ? P[0] : P[i];    // Leading vertex
+        console.log("a: ", a);   
+        tempArr.push(a);                        // Top stack element
+        var b = tempArr[tempArr.length - 2];    // Second-top stack element
+        console.log("b: ", b);   
+        var c = tempArr[tempArr.length - 3];    // Third-top stack element
+        console.log("c: ", c);   
+        var A = b.sub(c);
+        console.log("A: ", A);   
+        var B = a.sub(c);
+        console.log("B: ", B);
+
+        // If clockwise orientation...
+        while ((A.x * B.y - B.x * A.y) <= 0)
+        {
+            console.log("Swapping...")
+            // Replacing previous top-stack element with this element
+            tempArr[tempArr.length - 2] = tempArr[tempArr.length - 1];
+            console.log("length: ", tempArr.length);
+            tempArr.length = tempArr.length - 1;
+            console.log("length: ", tempArr.length);
+            
+            a = tempArr[tempArr.length - 1];
+            console.log("a: ", a);   
+            tempArr.push(a);
+            b = tempArr[tempArr.length - 2];
+            console.log("b: ", b);   
+            c = tempArr[tempArr.length - 3];
+            console.log("c: ", c);   
+            A = b.sub(c);
+            console.log("A: ", A);   
+            B = a.sub(c);
+            console.log("B: ", B);   
+            if ((A.x * B.y - B.x * A.y) > 0)
+            {
+                i++;
+            }
+        }
+        // i++;
+    }
+    console.log(tempArr);
+
+    // Converting array of points into array of lines
+    var arr = [];
+    arr.push(tempArr[0], tempArr[1]);
+    for (var i = 1; i < tempArr.length; i++)
+    {
+        arr.push(tempArr[i - 1], tempArr[i]);
+    }
+    arr.push(tempArr[tempArr.length - 1], tempArr[0]);
+
+    Array.prototype.push.apply(P, arr);
 };
 //#endregion
 
